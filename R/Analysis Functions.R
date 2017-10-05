@@ -131,3 +131,42 @@ getsmooth<- function(vec,Step=NULL){
   val<- sort(d)
   return(val)
 }
+
+#=====================================================================================================#
+#Function tkvec takes quantile of tau and maps from vec to y. If vl is in between two elements in vec,
+#it calculates the proportion of distance and projects into the corresponding ones in y
+#' @export
+tkvec<- function(vec,y,tau){
+  vec<- sort(vec)
+  vl<- quantile(vec,tau); vl<-unname(vl)
+  id<- min(which(vec>=vl))
+  rat<- abs(vec[id]-vl)/abs(vec[id]-vec[id-1]); rat=abs(rat)
+  if(abs(rat) <=1){
+    v = y[id]*rat + (1-rat)*y[id-1]
+  }else{
+    v=vec[id]
+  }
+  return(v)
+}
+
+#=====================================================================================================#
+#' Get distribution of VaR
+#'
+#' This function enables one to generate the distribution of the VaR
+#'
+#' @param full_out full matrix of output. The rows correspond to threshold
+#' values y_0 and the columns correspond to the number of MCMC draws
+#' @param y_0 vector of threshold \code{y} values. It must have length equal to 
+#' the number of rows of \code{full_out}
+#' \code{"mode"}, or \code{"quantile"}. The default is \code{NULL} which returns the median
+#' @param tau the probability tau=0.05 is the probability of VaR
+#' @return val this is the distribution of the VaR
+#'
+#' @export
+
+VaR<- function(full_out,y_0,tau=0.05){
+  full_out<-as.matrix(full_out)
+  val<- apply(full_out,2,tkvec,y_0=y_0,tau=tau)
+  val<- sort(val)
+  return(val)
+}
