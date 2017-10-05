@@ -2,7 +2,7 @@ Package: bayesdistreg
 Type: Package
 Title: Bayesian Distribution Regression
 Version: 0.1.0
-Author: Emmanuel Selorm Tsyawo & Weige Huang
+Author: Emmanuel Selorm Tsyawo & Weige Huang 
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: The package is used for computing bayesian distribution regression.
 License: GPL-2
