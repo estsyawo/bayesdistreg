@@ -8,7 +8,7 @@
 #' @return val a vector of normalised cumulative weights
 #'
 #' @examples
-#' kd<- matrix(runif(12,0,10),ncol = 3); apply(kd,2,fnCDF,nrmv=max(apply(kd,2,sum)))
+#' # kd<- matrix(runif(12,0,10),ncol = 3); apply(kd,2,fnCDF,nrmv=max(apply(kd,2,sum)))
 #' @export
 
 fnCDF<- function(vec,nrmc=NULL){

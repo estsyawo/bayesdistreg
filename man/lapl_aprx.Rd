@@ -20,6 +20,6 @@ This function generates mode and variance-covariance for a normal proposal
 distribution for the bayesian logit.
 }
 \examples{
-dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
+# dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
 
 }

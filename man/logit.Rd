@@ -20,7 +20,7 @@ like returns the likelihood function value.
 \code{logit} is the logistic likelihood function given data.
 }
 \examples{
-vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
-vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
+# vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
+# vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
 
 }

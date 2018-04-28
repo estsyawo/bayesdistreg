@@ -45,8 +45,8 @@ LogitLink=Vectorize(LogitLink) # ensure usability with entire vectors
 #' @return like returns the likelihood function value.
 #'
 #' @examples
-#' vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
-#' vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
+#' # vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
+#' # vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
 #'
 #' @export
 
@@ -87,8 +87,8 @@ logit = function(start,data,Log=TRUE){
 #' @return val Product of probability values for each parameter
 #'
 #' @examples
-#' prior_n(rep(0,6),0,10,Log = T) #log of prior
-#' prior_n(rep(0,6),0,10,Log = F) #no log
+#' # prior_n(rep(0,6),0,10,Log = T) #log of prior
+#' # prior_n(rep(0,6),0,10,Log = F) #no log
 #'
 #' @export
 prior_n<- function(pars,mu,sig,Log=F){
@@ -125,9 +125,9 @@ prior_u<- function(pars){
 #' @return val value function of the posterior
 #'
 #' @examples
-#' posterior(rep(0,5),genmle::dat_mroz,Log = F,mu=0,sig = 10,prior = "Normal") # no log
-#' posterior(rep(0,5),genmle::dat_mroz,Log = T,mu=0,sig = 10,prior = "Normal") # log
-#' posterior(rep(0,5),genmle::dat_mroz,Log = T) # use default values
+#' # posterior(rep(0,5),genmle::dat_mroz,Log = F,mu=0,sig = 10,prior = "Normal") # no log
+#' # posterior(rep(0,5),genmle::dat_mroz,Log = T,mu=0,sig = 10,prior = "Normal") # log
+#' # posterior(rep(0,5),genmle::dat_mroz,Log = T) # use default values
 #'
 #' @export
 posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
@@ -154,7 +154,7 @@ posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
 #' proposal draws from the multivariate normal distribution.
 #'
 #' @examples
-#' dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
+#' # dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
 #'
 #' @export
 lapl_aprx<- function(y,x){ #laplace approximation
@@ -210,4 +210,21 @@ fitdist<- function(Matparam,data){
   return(dd)
 }
 
-
+#================================================================================================#
+#' Parlapply a function
+#'
+#' \code{paRLply} parlapply from the parallel package with a function as input
+#'
+#' @param vec vector of inputs over which to parallel compute
+#' @param fn the function
+#' @param ... extra inputs to \code{fn}
+#' @return 
+#'
+#' @export
+parLply<- function(vec,fn,type="FORK",...){
+no_cores<-parallel::detectCores() - 1
+c1<-parallel::makeCluster(no_cores, type = type)
+out<- parallel::parLapply(c1,vec,fn,...)
+parallel::stopCluster(c1)
+out
+}

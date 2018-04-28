@@ -5,7 +5,7 @@
 \title{Independence Metropolis-Hastings Algorithm}
 \usage{
 IndepMH(data, propob = NULL, posterior = NULL, iter = 15000,
-  burn = 1000, start = NULL, prior = "Normal", mu = 0, sig = 10)
+  burn = 1000, start = NULL, prior = "Uniform", mu = 0, sig = 10)
 }
 \arguments{
 \item{data}{data required for the posterior distribution}
@@ -36,11 +36,11 @@ val a list of matrix of draws pardraws and the acceptance rate
 The default is the normal distribution
 }
 \examples{
-data = genmle::dat_mroz
-propob<- lapl_aprx(data[,1],data[,-1])
-IndepMHob<- IndepMH(data=data,propob) # prior="Normal"
-system.time(IndepMHob<- IndepMH(data=data)) # time operation
-IndepMHob<- IndepMH(data=data,propob,prior="Uniform")
-IndepMHob<- IndepMH(data=data,propob,iter=50000) # a higher number of draws
+# data = genmle::dat_mroz
+# propob<- lapl_aprx(data[,1],data[,-1])
+# IndepMHob<- IndepMH(data=data,propob,iter=3000) # prior="Normal"
+# system.time(IndepMHob<- IndepMH(data=data),iter=3000) # time operation
+# IndepMHob<- IndepMH(data=data,propob,prior="Uniform",iter=3000)
+# IndepMHob<- IndepMH(data=data,propob,iter=3000) # a higher number of draws
 
 }

@@ -19,12 +19,12 @@
 #' @return val a list of matrix of draws pardraws and the acceptance rate
 #'
 #' @examples
-#' data = genmle::dat_mroz
-#' propob<- lapl_aprx(data[,1],data[,-1])
-#' RWMHob<- RWMH(data=data,propob) # prior="Normal"
-#' system.time(RWMHob<- RWMH(data=data,propob)) # time operation
-#' RWMHob<- RWMH(data=data,prior="Uniform")
-#' RWMHob<- RWMH(data=data,iter=50000) # a higher number of draws
+#' # data = genmle::dat_mroz
+#' # propob<- lapl_aprx(data[,1],data[,-1])
+#' # RWMHob<- RWMH(data=data,propob) # prior="Normal"
+#' # system.time(RWMHob<- RWMH(data=data,propob)) # time operation
+#' # RWMHob<- RWMH(data=data,prior="Uniform")
+#' # RWMHob<- RWMH(data=data,iter=5000) # a higher number of draws
 #'
 #' @export
 
@@ -85,16 +85,16 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,
 #' @return val a list of matrix of draws pardraws and the acceptance rate
 #'
 #' @examples
-#' data = genmle::dat_mroz
-#' propob<- lapl_aprx(data[,1],data[,-1])
-#' IndepMHob<- IndepMH(data=data,propob) # prior="Normal"
-#' system.time(IndepMHob<- IndepMH(data=data)) # time operation
-#' IndepMHob<- IndepMH(data=data,propob,prior="Uniform")
-#' IndepMHob<- IndepMH(data=data,propob,iter=50000) # a higher number of draws
+#' # data = genmle::dat_mroz
+#' # propob<- lapl_aprx(data[,1],data[,-1])
+#' # IndepMHob<- IndepMH(data=data,propob,iter=3000) # prior="Normal"
+#' # system.time(IndepMHob<- IndepMH(data=data),iter=3000) # time operation
+#' # IndepMHob<- IndepMH(data=data,propob,prior="Uniform",iter=3000)
+#' # IndepMHob<- IndepMH(data=data,propob,iter=3000) # a higher number of draws
 #'
 #' @export
 
-IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,prior="Normal",mu=0,sig=10){
+IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,prior="Uniform",mu=0,sig=10){
   if(is.null(posterior)){
     logpost<- function(start,data) posterior(start,data,Log=T,mu=mu,sig=sig,prior=prior)
     #define posterior distribution
@@ -102,8 +102,18 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NU
   if(is.null(propob)){
     parrs = lapl_aprx(data[,1],data[,-1])
     propob=lapl_aprx2(parrs$mode,logpost,data=data) #approximate the actual posterior distribution
-  }
-  varprop = 1.5*parrs$var
+    zj = 1.5*parrs$var
+    if(any(eigen(zj)$values<=0)){
+      varprop=1.5*parrs$var
+    }else{
+      varprop=1.5*propob$var
+    }
+    
+  }else{
+    varprop = 1.5*propob$var 
+    }
+  
+  
   npar = length(propob$mode)
   Mat = array(0, c(iter, npar))
   if(is.null(start)){

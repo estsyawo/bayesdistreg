@@ -37,11 +37,11 @@ val a list of matrix of draws pardraws and the acceptance rate
 The default is the normal distribution
 }
 \examples{
-data = genmle::dat_mroz
-propob<- lapl_aprx(data[,1],data[,-1])
-RWMHob<- RWMH(data=data,propob) # prior="Normal"
-system.time(RWMHob<- RWMH(data=data,propob)) # time operation
-RWMHob<- RWMH(data=data,prior="Uniform")
-RWMHob<- RWMH(data=data,iter=50000) # a higher number of draws
+# data = genmle::dat_mroz
+# propob<- lapl_aprx(data[,1],data[,-1])
+# RWMHob<- RWMH(data=data,propob) # prior="Normal"
+# system.time(RWMHob<- RWMH(data=data,propob)) # time operation
+# RWMHob<- RWMH(data=data,prior="Uniform")
+# RWMHob<- RWMH(data=data,iter=5000) # a higher number of draws
 
 }
