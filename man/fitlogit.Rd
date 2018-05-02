@@ -9,7 +9,8 @@ fitlogit(pars, data)
 \arguments{
 \item{pars}{vector of parameters}
 
-\item{data}{data frame. The first column of the data frame ought to be the binary dependent variable}
+\item{data}{data frame. The first column of the data frame ought to be the binary dependent 
+variable}
 }
 \value{
 vec vector of fitted logit probabilities

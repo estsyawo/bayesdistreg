@@ -24,6 +24,6 @@ vector of threshold values and a data (with first column being the continuous de
 }
 \examples{
 # data0=DAT_ALL; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
-# out<- par_distreg(qnts,data0)
+# out<- par_distreg(qnts,data0,iter=3000)
 
 }

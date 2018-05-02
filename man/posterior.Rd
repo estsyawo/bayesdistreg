@@ -15,7 +15,8 @@ posterior(pars, data, Log = T, mu = 0, sig = 25, prior = "Normal")
 
 \item{mu}{mean of prior of each parameter value in case the prior is Normal (default: 0)}
 
-\item{sig}{standard deviation of prior of each parameter in case the prior is Normal (default: 25)}
+\item{sig}{standard deviation of prior of each parameter in case the prior is Normal 
+(default: 25)}
 
 \item{prior}{string input of "Normal" or "Uniform" prior distribution to use}
 }

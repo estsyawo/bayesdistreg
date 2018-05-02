@@ -113,7 +113,6 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NU
     varprop = 1.5*propob$var 
     }
   
-  
   npar = length(propob$mode)
   Mat = array(0, c(iter, npar))
   if(is.null(start)){

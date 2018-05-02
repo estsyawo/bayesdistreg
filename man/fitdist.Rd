@@ -7,13 +7,14 @@
 fitdist(Matparam, data)
 }
 \arguments{
-\item{Matparam}{an M x k matrix of parameter draws, each of being 1 x k}
+\item{Matparam}{an M x k matrix of parameter draws, each being 1 x k}
 
 \item{data}{dataframe used to obtain Matparam}
 }
 \value{
-
+dist fitted distribution
 }
 \description{
-\code{fitdist} function generates a vector of mean fitted probabilities that constitute the distribution
+\code{fitdist} function generates a vector of mean fitted probabilities that constitute the 
+distribution
 }

@@ -11,11 +11,13 @@ parLply(vec, fn, type = "FORK", ...)
 
 \item{fn}{the function}
 
+\item{type}{this option is set to "FORK", use "PSOCK" for windows}
+
 \item{...}{extra inputs to \code{fn}}
 }
 \value{
-
+out parallel computed output
 }
 \description{
-\code{paRLply} parlapply from the parallel package with a function as input
+\code{paRLply} parlapply from the \code{parallel} package with a function as input
 }

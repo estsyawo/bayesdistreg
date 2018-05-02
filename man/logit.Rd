@@ -11,7 +11,8 @@ logit(start, data, Log = TRUE)
 
 \item{data}{dataframe. The first column should be the dependent variable.}
 
-\item{Log}{a logical input (default True) to take the log of the likelihood. Only set FALSE if you do not need the default TRUE}
+\item{Log}{a logical input (default True) to take the log of the likelihood. Only set 
+FALSE if you do not need the default TRUE}
 }
 \value{
 like returns the likelihood function value.
