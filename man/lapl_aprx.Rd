@@ -4,12 +4,14 @@
 \alias{lapl_aprx}
 \title{Laplace approximation of posterior to normal}
 \usage{
-lapl_aprx(y, x)
+lapl_aprx(y, x, glmobj = FALSE)
 }
 \arguments{
 \item{y}{the binary dependent variable y}
 
 \item{x}{the matrix of independent variables.}
+
+\item{glmobj}{logical for returning the logit glm object}
 }
 \value{
 val A list of mode variance-covariance matrix, and scale factor for

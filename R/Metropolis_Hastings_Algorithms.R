@@ -34,8 +34,7 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,
   #define posterior distribution
   }
   if(is.null(propob)){
-    parrs = lapl_aprx(data[,1],data[,-1])
-    propob=lapl_aprx2(parrs$mode,logpost,data=data) #approximate the actual posterior distribution
+    propob = lapl_aprx(data[,1],data[,-1])
   }
   varprop = 1.5*propob$var
   npar = length(propob$mode)
@@ -100,19 +99,9 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NU
     #define posterior distribution
   }
   if(is.null(propob)){
-    parrs = lapl_aprx(data[,1],data[,-1])
-    propob=lapl_aprx2(parrs$mode,logpost,data=data) #approximate the actual posterior distribution
-    zj = 1.5*parrs$var
-    if(any(eigen(zj)$values<=0)){
-      varprop=1.5*parrs$var
-    }else{
-      varprop=1.5*propob$var
-    }
-    
-  }else{
-    varprop = 1.5*propob$var 
-    }
-  
+    propob = lapl_aprx(data[,1],data[,-1])
+  }
+  varprop = 1.5*propob$var 
   npar = length(propob$mode)
   Mat = array(0, c(iter, npar))
   if(is.null(start)){

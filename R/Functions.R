@@ -153,6 +153,7 @@ posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
 #'
 #' @param y the binary dependent variable y
 #' @param x the matrix of independent variables.
+#' @param glmobj logical for returning the logit glm object
 #' @return val A list of mode variance-covariance matrix, and scale factor for
 #' proposal draws from the multivariate normal distribution.
 #'
@@ -160,10 +161,16 @@ posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
 #' # dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
 #'
 #' @export
-lapl_aprx<- function(y,x){ #laplace approximation
+lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
   dat = data.frame(y,x)
   lgitob<-stats::glm(dat$y~.,data=dat,family = "binomial")
+  
+  if(!glmobj){
   val<- list(mode= lgitob$coefficients,var = stats::vcov(lgitob))
+  }else{
+    val<- list(mode= lgitob$coefficients,var = stats::vcov(lgitob)
+               ,glmobj=lgitob)
+  }
   return(val)
 }
 #================================================================================================#
@@ -327,7 +334,7 @@ getsmooth<- function(vec,Step=NULL){
 #' @export
 
 getsmooth.spline<- function(x,y,CI=NULL,cv=TRUE,...){
-  hz<- smooth.spline(x=x,y=y,cv=cv,...)
+  hz<- stats::smooth.spline(x=x,y=y,cv=cv,...)
   if(is.null(CI)){
   out=list(x=hz$x,y=hz$y)
   }else{
@@ -339,4 +346,40 @@ getsmooth.spline<- function(x,y,CI=NULL,cv=TRUE,...){
     out=list(x=hz$x,y=hz$y,lb=lb,ub=ub)
   }
 }
+
+#=====================================================================================================#
+#' Simultaneous bayesian confidence bands
+#'
+#' \code{simcnfB} obtains bayesian distribution confidence bands
+#'
+#' @param DF the target distribution as a vector
+#' @param DFmat the matrix of draws of the distribution, rows correspond to 
+#' indices elements in \code{DF}
+#' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @return cstar - a constant to add and subtract from DF to create 
+#' the confidence bands.
+#' @return uCB - upper band
+#'
+#' @export
+#' 
+simcnfB<- function(DF,DFmat,alpha=0.05){
+  M = abs(DFmat-DF)
+  cstar<-max(apply(M,1,quantile,probs=(1-alpha)))
+  cstar
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
