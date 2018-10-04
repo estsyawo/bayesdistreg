@@ -276,7 +276,7 @@ out
 quant_bdr<- function(taus,thresh,mat){
   mat=t(apply(mat,1,sort)); 
   q.inv<-function(j){
-    zg=stats::spline(x=mat[,j],y=thresh,xout = taus)
+    zg=stats::spline(x=sort(mat[,j]),y=thresh,xout = taus)
     sort(zg$y)
   } ; q.inv=Vectorize(q.inv)
   qmat<-sapply(1:ncol(mat),q.inv)
@@ -364,8 +364,12 @@ getsmooth.spline<- function(x,y,CI=NULL,cv=TRUE,...){
 #' 
 simcnfB<- function(DF,DFmat,alpha=0.05){
   M = abs(DFmat-DF)
-  cstar<-max(apply(M,1,quantile,probs=(1-alpha)))
-  cstar
+  #sdM = apply(M, 1, sd)
+  sdM = apply(M, 1, quantile,probs=0.75)-apply(M, 1, quantile,probs=0.25)
+  Ms = M/sdM
+  cstar<-max(apply(Ms,1,quantile,probs=(1-alpha)))
+  #cstar<-quantile(apply(Ms,1,max),probs=(1-alpha))
+  cstar*sdM
 }
 
 
