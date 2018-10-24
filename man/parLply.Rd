@@ -4,7 +4,7 @@
 \alias{parLply}
 \title{Parlapply a function}
 \usage{
-parLply(vec, fn, type = "FORK", ...)
+parLply(vec, fn, type = "FORK", no_cores = 1, ...)
 }
 \arguments{
 \item{vec}{vector of inputs over which to parallel compute}
@@ -12,6 +12,8 @@ parLply(vec, fn, type = "FORK", ...)
 \item{fn}{the function}
 
 \item{type}{this option is set to "FORK", use "PSOCK" for windows}
+
+\item{no_cores}{the number of cores to use. Default at 1}
 
 \item{...}{extra inputs to \code{fn}}
 }

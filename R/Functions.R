@@ -250,12 +250,12 @@ fitdist<- function(Matparam,data){
 #' @param vec vector of inputs over which to parallel compute
 #' @param fn the function
 #' @param type this option is set to "FORK", use "PSOCK" for windows
+#' @param no_cores the number of cores to use. Default at 1
 #' @param ... extra inputs to \code{fn}
 #' @return out parallel computed output
 #'
 #' @export
-parLply<- function(vec,fn,type="FORK",...){
-no_cores<-parallel::detectCores() - 1
+parLply<- function(vec,fn,type="FORK",no_cores=1,...){
 c1<-parallel::makeCluster(no_cores, type = type)
 out<- parallel::parLapply(c1,vec,fn,...)
 parallel::stopCluster(c1)
@@ -367,15 +367,12 @@ simcnfB<- function(DF,DFmat,alpha=0.05){
   #sdM = apply(M, 1, sd)
   sdM = apply(M, 1, quantile,probs=0.75)-apply(M, 1, quantile,probs=0.25)
   Ms = M/sdM
-  cstar<-max(apply(Ms,1,quantile,probs=(1-alpha)))
+  dj<- na.omit(apply(Ms,1,quantile,probs=(1-alpha),na.rm = TRUE))
+  dj<- dj[!is.infinite(dj)]
+  cstar<-max(dj,na.rm = TRUE)
   #cstar<-quantile(apply(Ms,1,max),probs=(1-alpha))
   cstar*sdM
 }
-
-
-
-
-
 
 
 
