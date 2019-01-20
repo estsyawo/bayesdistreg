@@ -7,9 +7,9 @@
 distreg(thresh, data0, MH = "IndepMH", ...)
 }
 \arguments{
-\item{thresh}{threshold value that is used to binarise the continuous dependent variable}
+\item{thresh}{threshold value that is used to binarise the continuous outcome variable}
 
-\item{data0}{original data set with the first column being the continuous dependent variable}
+\item{data0}{original data set with the first column being the continuous outcome variable}
 
 \item{MH}{metropolis-hastings algorithm to use; default:"IndepMH", alternative "RWMH"}
 
@@ -19,10 +19,10 @@ distreg(thresh, data0, MH = "IndepMH", ...)
 fitob a vector of fitted values corresponding to the distribution at threshold thresh
 }
 \description{
-\code{distreg} computes the distribution at a threshold value
+\code{distreg} draws randomly from the density of F(yo) at a threshold value yo
 }
 \examples{
-# data0=DAT_ALL; qnts<-quantile(data0[,1],c(0.5,0.25,0.5,0.75,0.95));
-# distob<- distreg(qnts[1],data0)
+# data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
+# distob<- distreg(qnt,data0); hist(distob)
 
 }

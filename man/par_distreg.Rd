@@ -4,14 +4,18 @@
 \alias{par_distreg}
 \title{Parallel compute bayesian distribution regression}
 \usage{
-par_distreg(thresh, data0, fn = distreg, ...)
+par_distreg(thresh, data0, fn = distreg, no_cores = 1, type = "FORK", ...)
 }
 \arguments{
-\item{thresh}{vector of threshold values. ensure the min and the max generate enough zeros and ones.}
+\item{thresh}{vector of threshold values.}
 
 \item{data0}{the original data set with a continous dependent variable in the first column}
 
 \item{fn}{bayesian distribution regression function. the default is distreg provided in the package}
+
+\item{no_cores}{number of cores for parallel computation}
+
+\item{type}{\code{type} passed to \code{makeCluster()} in the packagae \code{parallel}}
 
 \item{...}{any additional input parameters to pass to fn}
 }
@@ -19,11 +23,12 @@ par_distreg(thresh, data0, fn = distreg, ...)
 mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
 }
 \description{
-This function uses parallel computation to compute bayesian distribution regression for a given
-vector of threshold values and a data (with first column being the continuous dependent variable)
+\code{par_distreg} uses parallel computation to compute bayesian distribution regression for a given
+vector of threshold values and a data (with first column being the continuous outcome variable)
 }
 \examples{
-# data0=DAT_ALL; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
-# out<- par_distreg(qnts,data0,iter=3000)
+# data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
+# out<- par_distreg(qnts,data0,no_cores=3)
+# par(mfrow=c(3,2));invisible(apply(out,1,hist));par(mfrow=c(1,1))
 
 }

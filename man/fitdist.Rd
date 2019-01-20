@@ -7,14 +7,14 @@
 fitdist(Matparam, data)
 }
 \arguments{
-\item{Matparam}{an M x k matrix of parameter draws, each being 1 x k}
+\item{Matparam}{an M x k matrix of parameter draws, each being a 1 x k vector}
 
 \item{data}{dataframe used to obtain Matparam}
 }
 \value{
-dist fitted distribution
+dist fitted (marginalised) distribution
 }
 \description{
 \code{fitdist} function generates a vector of mean fitted probabilities that constitute the 
-distribution
+distribution. This involves marginalising out covariates.
 }

@@ -2,20 +2,24 @@
 % Please edit documentation in R/Functions.R
 \name{lapl_aprx2}
 \alias{lapl_aprx2}
-\title{An \code{optim}-based function maximiser}
+\title{Laplace approximation of posterior to normal}
 \usage{
-lapl_aprx2(start, func, ...)
+lapl_aprx2(y, x, family = "binomial", ...)
 }
 \arguments{
-\item{start}{the starting parameter values}
+\item{y}{the binary dependent variable y}
 
-\item{func}{the function to be maximised}
+\item{x}{the matrix of independent variables.}
 
-\item{...}{other arguments to be passed to func}
+\item{family}{a parameter to be passed \code{glm()}, defaults to the logit model}
+
+\item{...}{additional parameters to be passed to \code{glm()}}
 }
 \value{
-val list of mode and variance-covariance matrix
+val A list of mode variance-covariance matrix, and scale factor for
+proposal draws from the multivariate normal distribution.
 }
 \description{
-\code{lapl_aprx2} is used to take a laplace approximation of the posterior distribution
+\code{lapl_aprx2} is a more flexible alternative to \code{lapl_aprx}. This creates
+\code{glm} objects from which joint asymptotic distributions can be computed.
 }

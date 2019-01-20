@@ -4,31 +4,36 @@
 #' \code{RWMH} computes random draws of parameters using a specified proposal distribution.
 #' The default is the normal distribution
 #'
-#' @param data data required for the posterior distribution
+#' @param data data required for the posterior distribution. First column is the outcome
 #' @param propob a list of mean and variance-covariance of the normal proposal distribution
 #' (default: NULL i.e. internally generated)
 #' @param posterior the posterior distribution. It is set to null in order to use the logit posterior.
 #' The user can specify log posterior as a function of parameters and data (pars,data)
-#' @param iter number of random draws desired (default: 15000)
-#' @param burn burn-in period for the Random Walk MH algorithm (default: 1000)
+#' @param iter number of random draws desired
+#' @param burn burn-in period for the Random Walk MH algorithm
+#' @param vscale a positive value to scale up or down the variance-covariance matrix in
+#' the proposal distribution
 #' @param start starting values of parameters for the MH algorithm.
-#' It is automatically generated but the user can also specify.
+#' It is automatically generated from the proposal distribution but the user can also specify.
 #' @param prior the prior distribution (default: "Normal", alternative: "Uniform")
 #' @param mu the mean of the normal prior distribution (default:0)
 #' @param sig the variance of the normal prior distribution (default:10)
-#' @return val a list of matrix of draws pardraws and the acceptance rate
+#' @return val a list of matrix of draws Matpram and the acceptance rate
 #'
 #' @examples
-#' # data = genmle::dat_mroz
-#' # propob<- lapl_aprx(data[,1],data[,-1])
-#' # RWMHob<- RWMH(data=data,propob) # prior="Normal"
-#' # system.time(RWMHob<- RWMH(data=data,propob)) # time operation
-#' # RWMHob<- RWMH(data=data,prior="Uniform")
-#' # RWMHob<- RWMH(data=data,iter=5000) # a higher number of draws
+#' # y = indicat(faithful$waiting,70)
+#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' # data = data.frame(y,x)
+#' # propob<- lapl_aprx(y,x)
+#' # RWMHob_n<- RWMH(data=data,propob) # prior="Normal"
+#' # RWMHob_u<- RWMH(data=data,propob,prior="Uniform")
+#' # par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,hist))
+#' # invisible(apply(RWMHob_u$Matpram,2,hist));par(mfrow=c(1,1))
 #'
 #' @export
 
-RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,prior="Normal",mu=0,sig=10){
+RWMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
+                start=NULL,prior="Normal",mu=0,sig=10){
   if(is.null(posterior)){
     logpost<- function(start,data) posterior(start,data,Log=T,mu=mu,sig=sig,prior=prior)
   #define posterior distribution
@@ -36,7 +41,7 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,
   if(is.null(propob)){
     propob = lapl_aprx(data[,1],data[,-1])
   }
-  varprop = 1.5*propob$var
+  varprop = vscale*propob$var
   npar = length(propob$mode)
   Mat = array(0, c(iter, npar))
   if(is.null(start)){
@@ -57,25 +62,26 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,
         Mat[i,]=start
       }
   }
-  cat("RWMH algorithm successful\n")
-  val = list(Matpram=Mat[-c(1:burn),],AcceptanceRate = AccptRate/iter)
+  AcceptanceRate = AccptRate/iter
+  val = list(Matpram=Mat[-c(1:burn),],AcceptanceRate=AcceptanceRate)
+  cat("Random Walk MH algorithm successful. Acceptance ratio = ", AcceptanceRate," \n")
   return(val)
   }
-
 
 
 #===============================================================================================#
 #' Independence Metropolis-Hastings Algorithm
 #'
 #' \code{IndepMH} computes random draws of parameters using a specified proposal distribution.
-#' The default is the normal distribution
 #'
 #' @param data data required for the posterior distribution
 #' @param propob a list of mean and variance-covariance of the normal proposal distribution (default:NULL)
 #' @param posterior the posterior distribution. It is set to null in order to use the logit posterior.
 #' The user can specify log posterior as a function of parameters and data (pars,data)
-#' @param iter number of random draws desired (default: 15000)
-#' @param burn burn-in period for the Random Walk MH algorithm (default: 1000)
+#' @param iter number of random draws desired (default: 1500)
+#' @param burn burn-in period for the MH algorithm (default: 500)
+#' @param vscale a positive value to scale up or down the variance-covariance matrix in
+#' the proposal distribution
 #' @param start starting values of parameters for the MH algorithm.
 #' It is automatically generated but the user can also specify.
 #' @param prior the prior distribution (default: "Normal", alternative: "Uniform")
@@ -84,16 +90,19 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,
 #' @return val a list of matrix of draws pardraws and the acceptance rate
 #'
 #' @examples
-#' # data = genmle::dat_mroz
-#' # propob<- lapl_aprx(data[,1],data[,-1])
-#' # IndepMHob<- IndepMH(data=data,propob,iter=3000) # prior="Normal"
-#' # system.time(IndepMHob<- IndepMH(data=data),iter=3000) # time operation
-#' # IndepMHob<- IndepMH(data=data,propob,prior="Uniform",iter=3000)
-#' # IndepMHob<- IndepMH(data=data,propob,iter=3000) # a higher number of draws
+#' # y = indicat(faithful$waiting,70)
+#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' # data = data.frame(y,x)
+#' # propob<- lapl_aprx(y,x)
+#' # IndepMH_n<- IndepMH(data=data,propob) # prior="Normal"
+#' # IndepMH_u<- IndepMH(data=data,propob,prior="Uniform") # prior="Uniform"
+#' # par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,hist))
+#' # invisible(apply(IndepMH_u$Matpram,2,hist));par(mfrow=c(1,1))
 #'
 #' @export
 
-IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NULL,prior="Uniform",mu=0,sig=10){
+IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
+                   start=NULL,prior="Uniform",mu=0,sig=10){
   if(is.null(posterior)){
     logpost<- function(start,data) posterior(start,data,Log=T,mu=mu,sig=sig,prior=prior)
     #define posterior distribution
@@ -101,7 +110,7 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NU
   if(is.null(propob)){
     propob = lapl_aprx(data[,1],data[,-1])
   }
-  varprop = 1.5*propob$var 
+  varprop = vscale*propob$var 
   npar = length(propob$mode)
   Mat = array(0, c(iter, npar))
   if(is.null(start)){
@@ -121,7 +130,8 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=15000,burn=1000,start=NU
       Mat[i,]=start
     }
   }
-  cat("IndepMH algorithm successful\n")
-  val = list(Matpram=Mat[-c(1:burn),],AcceptanceRate = AccptRate/iter)
+  Accept_Rate = AccptRate/iter
+  val = list(Matpram=Mat[-c(1:burn),],Accept_Rate = AccptRate/iter)
+  cat("IndepMH algorithm successful. Acceptance ratio = ", Accept_Rate," \n")
   return(val)
 }

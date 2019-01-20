@@ -2,35 +2,7 @@
 % Please edit documentation in R/Regression_Functions.R
 \name{par_distreg3}
 \alias{par_distreg3}
-\title{#==============================================================================================#
-#' Parallel compute bayesian distribution regression
-#'
-#' This version of the function uses the foreach package
-#'
-#' @param thresh vector of threshold values. ensure the min and the max generate enough zeros and ones.
-#' @param data0 the original data set with a continous dependent variable in the first column
-#' @param fn bayesian distribution regression function. the default is distreg provided in the package
-#' @param ... any additional input parameters to pass to fn
-#' @return mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
-#'
-#' @examples
-#' # data0=DAT_ALL; qnts<-quantile(data0[,1],c(0.5,0.25,0.5,0.75,0.95))
-#' # out2<- par_distreg2(qnts,data0,iter=3000)
-#'
-#' @export
-par_distreg2<-function(thresh,data0,fn=distreg,...){ #takes a vector of threshold values
-  no_cores<-parallel::detectCores() - 1
-  c1<-parallel::makeCluster(no_cores)
-  doParallel::registerDoParallel(c1); library("foreach")
-  mat=foreach(thresh = thresh, .combine = rbind,
-          .export = c("thresh","data0"),.packages = "bayesdistreg")  %dopar%
-    fn(thresh,data0,...)
-  #mat<- parallel::parSapply(c1,thresh,fn,data0=data0,...)
-  parallel::stopCluster(c1)
-  mat<- t(mat); mat<- (apply(mat,1,sort))
-  return(mat)
-}
-Parallel compute bayesian distribution regression}
+\title{Parallel compute bayesian distribution regression}
 \usage{
 par_distreg3(thresh, data0, fn = distreg, ...)
 }
@@ -50,9 +22,4 @@ mat a G x M matrix of output (G is the length of thresh, M is the number of draw
 \code{par_distreg3} function uses parallel computation to compute bayesian distribution regression for a given
 vector of threshold values and a data (with first column being the continuous dependent variable). It
 is suitable for all systems (including Windows)
-}
-\examples{
-# data0=DAT_ALL; qnts<-quantile(data0[,1],c(0.5,0.25,0.5,0.75,0.95))
-# out<- par_distreg3(qnts,data0,iter=3000)
-
 }

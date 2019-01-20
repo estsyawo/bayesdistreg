@@ -4,7 +4,7 @@
 \alias{prior_n}
 \title{Normal Prior distribution}
 \usage{
-prior_n(pars, mu, sig, Log = F)
+prior_n(pars, mu, sig, Log = FALSE)
 }
 \arguments{
 \item{pars}{parameter values}
@@ -13,7 +13,7 @@ prior_n(pars, mu, sig, Log = F)
 
 \item{sig}{standard deviation of each parameter value}
 
-\item{Log}{logical to take the log of likelihoods or not (default: FALSE)}
+\item{Log}{logical to take the log of prior or not (defaults to FALSE)}
 }
 \value{
 val Product of probability values for each parameter

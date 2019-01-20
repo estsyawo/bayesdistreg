@@ -13,5 +13,5 @@ prior_u(pars)
 val value of joint prior =1 for the uniform prior
 }
 \description{
-This uniform prior distribution proportional to 1 (This function is redundant for now)
+This uniform prior distribution proportional to 1
 }

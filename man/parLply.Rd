@@ -2,7 +2,7 @@
 % Please edit documentation in R/Functions.R
 \name{parLply}
 \alias{parLply}
-\title{Parlapply a function}
+\title{Parallel compute}
 \usage{
 parLply(vec, fn, type = "FORK", no_cores = 1, ...)
 }
@@ -11,15 +11,16 @@ parLply(vec, fn, type = "FORK", no_cores = 1, ...)
 
 \item{fn}{the function}
 
-\item{type}{this option is set to "FORK", use "PSOCK" for windows}
+\item{type}{this option is set to "FORK", use "PSOCK" on windows}
 
-\item{no_cores}{the number of cores to use. Default at 1}
+\item{no_cores}{the number of cores to use. Defaults at 1}
 
-\item{...}{extra inputs to \code{fn}}
+\item{...}{extra inputs to \code{fn()}}
 }
 \value{
 out parallel computed output
 }
 \description{
-\code{paRLply} parlapply from the \code{parallel} package with a function as input
+\code{parLply} uses \code{parlapply} from the \code{parallel} package with 
+a function as input
 }

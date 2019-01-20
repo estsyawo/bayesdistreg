@@ -16,7 +16,7 @@ indicat<- function(y,y0){
   }
   return(val)
 }
-indicat<- Vectorize(indicat) #make the function usable with a vector y
+indicat<- base::Vectorize(indicat) #make the function usable with a vector y
 
 #===============================================================================
 #' Logit function
@@ -32,27 +32,22 @@ LogitLink = function(x) {
   val=(1/(1+exp(-x)))
   return(val)
   }
-LogitLink=Vectorize(LogitLink) # ensure usability with entire vectors
+LogitLink=base::Vectorize(LogitLink) # ensure usability with entire vectors
 
 #================================================================================================#
 #' Logit likelihood function
 #'
 #' \code{logit} is the logistic likelihood function given data.
 #'
-#' @param start starting values
+#' @param start vector of starting values
 #' @param data dataframe. The first column should be the dependent variable.
-#' @param Log a logical input (default True) to take the log of the likelihood. Only set 
-#' FALSE if you do not need the default TRUE
+#' @param Log a logical input (defaults to \code{True}) to take the log of the likelihood. 
 #' @return like returns the likelihood function value.
-#'
-#' @examples
-#' # vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
-#' # vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
 #'
 #' @export
 
 logit = function(start,data,Log=TRUE){
-  y=data[,1]; x=data[,-1]; #x = scale(x) # apportion response and explanatory variables
+  y=data[,1]; x=data[,-1]; # apportion response and explanatory variables
   penalty <- -10^12
   like <- penalty
   N <- length(y);
@@ -63,18 +58,17 @@ logit = function(start,data,Log=TRUE){
   for (i in 1:nrow(data)) {
     m[i] = x[i,]%*%start
   }
-  g = LogitLink(m) # take logit transform of all values
-  # multiply g by weights if weights
+  g = LogitLink(m) # take logit transform of linear prediction vector
   for (i in 1:nrow(data)) {
     if(y[i]==1){p=g[i]}
     if(y[i]==0){p=(1-g[i])}
-    f[i] = ifelse(Log, log(p), p)  #compute log of likelihood
+    f[i] = ifelse(Log, log(p), p)  # compute log of likelihood
   }
   like = ifelse(Log, sum(f),prod(f))
   if (is.na(like) | is.infinite(like)) {
     like <- penalty
   }
-  return(like) # for maximisation
+  return(like)
 }
 #================================================================================================#
 #' Normal Prior distribution
@@ -84,7 +78,7 @@ logit = function(start,data,Log=TRUE){
 #' @param pars parameter values
 #' @param mu mean value of each parameter value
 #' @param sig standard deviation of each parameter value
-#' @param Log logical to take the log of likelihoods or not (default: FALSE)
+#' @param Log logical to take the log of prior or not (defaults to FALSE)
 #' @return val Product of probability values for each parameter
 #'
 #' @examples
@@ -92,7 +86,7 @@ logit = function(start,data,Log=TRUE){
 #' # prior_n(rep(0,6),0,10,Log = F) #no log
 #'
 #' @export
-prior_n<- function(pars,mu,sig,Log=F){
+prior_n<- function(pars,mu,sig,Log=FALSE){
   val<- ifelse(!Log, prod(stats::dnorm(pars,mu,sig)),sum(stats::dnorm(pars,mu,sig,log= T))) 
   #if log FALSE
   return(val)
@@ -101,7 +95,7 @@ prior_n<- function(pars,mu,sig,Log=F){
 #================================================================================================#
 #' Uniform Prior distribution
 #'
-#' This uniform prior distribution proportional to 1 (This function is redundant for now)
+#' This uniform prior distribution proportional to 1
 #'
 #' @param pars parameter values
 #' @return val value of joint prior =1 for the uniform prior
@@ -116,11 +110,11 @@ prior_u<- function(pars){
 #================================================================================================#
 #' Posterior distribution
 #'
-#' \code{posterior} computes the value of the posterior at parameter values pars
+#' \code{posterior} computes the value of the posterior at parameter values \code{pars}
 #'
 #' @param pars parameter values
 #' @param data dataframe. The first column must be the binary dependent variable
-#' @param Log logical to take the log or not (default: TRUE)
+#' @param Log logical to take the log of the posterior.(defaults to TRUE)
 #' @param mu mean of prior of each parameter value in case the prior is Normal (default: 0)
 #' @param sig standard deviation of prior of each parameter in case the prior is Normal 
 #' (default: 25)
@@ -158,7 +152,9 @@ posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
 #' proposal draws from the multivariate normal distribution.
 #'
 #' @examples
-#' # dat=genmle::dat_mroz ;y=dat$y; x = dat[,-1]; gg<- lapl_aprx(y,x)
+#' # y = indicat(faithful$waiting,mean(faithful$waiting)) 
+#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' # gg<- lapl_aprx(y,x)
 #'
 #' @export
 lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
@@ -174,24 +170,24 @@ lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
   return(val)
 }
 #================================================================================================#
-#' An \code{optim}-based function maximiser
+#' Laplace approximation of posterior to normal
 #'
-#' \code{lapl_aprx2} is used to take a laplace approximation of the posterior distribution
+#' \code{lapl_aprx2} is a more flexible alternative to \code{lapl_aprx}. This creates
+#' \code{glm} objects from which joint asymptotic distributions can be computed.
 #'
-#' @param start the starting parameter values
-#' @param func the function to be maximised
-#' @param ... other arguments to be passed to func
-#' @return val list of mode and variance-covariance matrix
+#' @param y the binary dependent variable y
+#' @param x the matrix of independent variables.
+#' @param family a parameter to be passed \code{glm()}, defaults to the logit model
+#' @param ... additional parameters to be passed to \code{glm()}
+#' @return val A list of mode variance-covariance matrix, and scale factor for
+#' proposal draws from the multivariate normal distribution.
 #'
 #' @export
 
-lapl_aprx2<- function(start,func,...){
-  mxob<- stats::optim(par=start,fn=func,...,
-               control=list(fnscale=-1,trace=F,REPORT=50,
-                            factr=1e-15, maxit=20000,
-                            ndeps=rep(1e-6,length(start))),hessian=T)
-  val = list(mode=mxob$par,var=solve(-mxob$hessian))
-  return(val)
+lapl_aprx2<- function(y,x,family = "binomial",...){ #laplace approximation
+  dat = data.frame(y,x)
+  lgitob<-stats::glm(dat$y~.,data=dat,family = family,...)
+  lgitob
 }
 
 
@@ -210,7 +206,7 @@ lapl_aprx2<- function(start,func,...){
 
 
 fitlogit<- function(pars,data){
-  y=data[,1]; x=data[,-1]; #x = scale(x) # apportion response and explanatory variables
+  y=data[,1]; x=data[,-1]; 
   penalty <- -10^12
   like <- penalty
   N <- length(y);
@@ -229,11 +225,11 @@ fitlogit<- function(pars,data){
 #' The distribution of mean fitted logit probabilities
 #'
 #' \code{fitdist} function generates a vector of mean fitted probabilities that constitute the 
-#' distribution
+#' distribution. This involves marginalising out covariates.
 #'
-#' @param Matparam an M x k matrix of parameter draws, each being 1 x k
+#' @param Matparam an M x k matrix of parameter draws, each being a 1 x k vector
 #' @param data dataframe used to obtain Matparam
-#' @return dist fitted distribution
+#' @return dist fitted (marginalised) distribution
 #'
 #' @export
 fitdist<- function(Matparam,data){
@@ -243,15 +239,16 @@ fitdist<- function(Matparam,data){
 }
 
 #================================================================================================#
-#' Parlapply a function
+#' Parallel compute
 #'
-#' \code{paRLply} parlapply from the \code{parallel} package with a function as input
+#' \code{parLply} uses \code{parlapply} from the \code{parallel} package with 
+#' a function as input
 #'
 #' @param vec vector of inputs over which to parallel compute
 #' @param fn the function
-#' @param type this option is set to "FORK", use "PSOCK" for windows
-#' @param no_cores the number of cores to use. Default at 1
-#' @param ... extra inputs to \code{fn}
+#' @param type this option is set to "FORK", use "PSOCK" on windows
+#' @param no_cores the number of cores to use. Defaults at 1
+#' @param ... extra inputs to \code{fn()}
 #' @return out parallel computed output
 #'
 #' @export
@@ -284,103 +281,95 @@ quant_bdr<- function(taus,thresh,mat){
 }
 
 #=====================================================================================================#
-#' Smooth marginal conditional distribution
+#' Symmetric simultaneous bayesian confidence bands
 #'
-#' \code{getsmooth} uses moving means to minimise kinks in marginal conditional distributions
+#' \code{simcnfB} obtains symmetric bayesian distribution confidence bands
 #'
-#' @param vec a vector of representing the marginal conditional quantile
-#' @param Step length of moving window used to calculate the moving mean
-#' @return val vector of smoothed marginal conditional quantile
-#'
-#' @export
-
-getsmooth<- function(vec,Step=NULL){
-  #vec<- sort(vec); 
-  lv<- length(vec)
-  d<- rep(0,lv)
-  if(is.null(Step)){Step=3}
-  d[1:Step]<- cumsum(vec[1:Step])/c(1:Step)
-  if(lv>Step){
-    for(j in (Step+1):lv){
-      d[j]<- mean(vec[(j-Step+1):j])
-    }
-  }else{
-    stop("The length of the vector cannot be longer than Step")
-  }
-  #val<- sort(d)
-  val<- d
-  return(val)
-}
-
-
-#=====================================================================================================#
-#' Smooth marginal conditional distribution using smooth.spline()
-#'
-#' \code{getsmooth.spline} uses the function \code{smooth.spline()} in the 
-#' \code{stats} package for smoothing
-#'
-#' @param x a vector of representing the marginal conditional quantile
-#' @param y length of moving window used to calculate the moving mean
-#' @param CI (optional) a list of \code{CI$lb} and \code{CI$up} of lower and upper confidence
-#' intervals of \code{y}
-#' @param cv logical for cross-validation to be passed to \code{smooth.spline()}
-#' @param ... additional paramters to be passed to \code{smooth.spline()}
-#' @return out a list with the following components:
-#' @return x output vector x
-#' @return y output vector y
-#' @return lb lower confidence band if \code{CI} is provided
-#' @return ub upper confidence band if \code{CI} is provided
-#'
-#' @export
-
-getsmooth.spline<- function(x,y,CI=NULL,cv=TRUE,...){
-  hz<- stats::smooth.spline(x=x,y=y,cv=cv,...)
-  if(is.null(CI)){
-  out=list(x=hz$x,y=hz$y)
-  }else{
-    # hl<- smooth.spline(x=x,y=CI$lb,cv=cv,...)
-    # hu<- smooth.spline(x=x,y=CI$ub,cv=cv,...)
-    up<- mean(abs(CI$ub-y)); lw<- mean(abs(CI$lb-y))
-    lb= hz$y-lw; ub=hz$y+up
-    #out=list(x=hz$x,y=hz$y,lb=hl$y,ub=hu$y)
-    out=list(x=hz$x,y=hz$y,lb=lb,ub=ub)
-  }
-}
-
-#=====================================================================================================#
-#' Simultaneous bayesian confidence bands
-#'
-#' \code{simcnfB} obtains bayesian distribution confidence bands
-#'
-#' @param DF the target distribution as a vector
+#' @param DF the target distribution/quantile function as a vector
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
 #' indices elements in \code{DF}
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @param scale logical for scaling using the inter-quartile range
 #' @return cstar - a constant to add and subtract from DF to create 
-#' the confidence bands.
-#' @return uCB - upper band
+#'  confidence bands if no scaling=FALSE else a vector of length DF.
 #'
 #' @export
 #' 
-simcnfB<- function(DF,DFmat,alpha=0.05){
-  M = abs(DFmat-DF)
-  #sdM = apply(M, 1, sd)
-  sdM = apply(M, 1, quantile,probs=0.75)-apply(M, 1, quantile,probs=0.25)
-  Ms = M/sdM
-  dj<- na.omit(apply(Ms,1,quantile,probs=(1-alpha),na.rm = TRUE))
-  dj<- dj[!is.infinite(dj)]
-  cstar<-max(dj,na.rm = TRUE)
-  #cstar<-quantile(apply(Ms,1,max),probs=(1-alpha))
-  cstar*sdM
+simcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
+  Ms = abs(DFmat-DF)
+  if(!scale){
+    dj<- apply(Ms,2,max,na.rm=TRUE)
+    cstar<- stats::quantile(dj[!is.infinite(dj)],probs = (1-alpha),na.rm = TRUE)
+    ans = cstar
+  }else{
+    scv = apply(Ms,1,stats::IQR,na.rm=TRUE)
+    Msc = Ms/scv
+    dj<- apply(Msc,2,max,na.rm=TRUE)
+    cstar<- stats::quantile(dj[!is.infinite(dj)],probs = (1-alpha),na.rm = TRUE)
+    ans = cstar*scv
+  }
+  
+  return(ans)
 }
-
-
-
-
-
-
-
-
-
-
-
+#=====================================================================================================#
+#' Asymmetric simultaneous bayesian confidence bands
+#'
+#' \code{asymcnfB} obtains asymmetric bayesian distribution confidence bands
+#'
+#' @param DF the target distribution/quantile function as a vector
+#' @param DFmat the matrix of draws of the distribution, rows correspond to 
+#' indices elements in \code{DF}
+#' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @param scale logical for scaling using the inter-quartile range
+#' @return cstar - a constant to add and subtract from DF to create 
+#'  confidence bands if no scaling=FALSE else a vector of length DF.
+#'
+#' @export
+#' 
+asymcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
+  alf2 = alpha/2
+  Ms = DFmat-DF
+  if(!scale){
+    djmx<- apply(Ms,2,max,na.rm=TRUE)
+    djmn<- apply(Ms,2,min,na.rm=TRUE)
+    cmin = -stats::quantile(djmn,probs=alf2,na.rm = TRUE)
+    cmax = stats::quantile(djmx,probs=(1-alf2),na.rm = TRUE)
+    ans=list(cmin=cmin,cmax=cmax)
+  }else{
+    scv = apply(Ms,1,stats::IQR,na.rm=TRUE)
+    Msc = Ms/scv
+    djmx<- apply(Msc,2,max,na.rm=TRUE)
+    djmn<- apply(Msc,2,min,na.rm=TRUE)
+    cmin = -stats::quantile(djmn,probs=alf2,na.rm = TRUE)
+    cmax = stats::quantile(djmx,probs=(1-alf2),na.rm = TRUE)
+    ans=list(cmin=cmin*scv,cmax=cmax*scv)
+  }
+  return(ans)        
+}
+#===================================================================================================
+#'  Montiel Olea and Plagborg-Moller (2018) confidence bands
+#'
+#' \code{jntCBOM} implements calibrated symmetric confidence bands (algorithm 2)
+#' in Montiel Olea and Plagborg-Moller (2018).
+#'
+#' @param DF the target distribution/quantile function as a vector
+#' @param DFmat the matrix of draws of the distribution, rows correspond to 
+#' indices elements in \code{DF}
+#' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @param eps steps by which the grid on 1-alpha:alpha/2 is searched.
+#' @return CB - confidence band, zeta - the optimal level
+#' @export
+#' 
+jntCBOM<- function(DF,DFmat,alpha=0.05,eps=1e-3){
+  G = length(DF); DF = sort(DF)
+  zeta = (alpha/(2*G))
+  cp = 1;
+  while(cp>(1-alpha) & zeta <=(alpha/2)){
+    vm=apply(DFmat,1,stats::quantile,probs=c(zeta,(1-zeta)))
+    vm=apply(vm,1,sort)
+    zk = vm - DF
+    cp=length(which(zk[,1]<=0 & zk[,2]>=0))/G
+    zeta=zeta+eps
+  }
+  return(list(CB = vm,zeta=(zeta-eps)))
+}

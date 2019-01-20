@@ -3,10 +3,11 @@ Type: Package
 Title: Bayesian Distribution Regression
 Version: 0.1.0
 Author: Emmanuel Selorm Tsyawo & Weige Huang 
-Maintainer: The package maintainer <estsyawo@temple.edu>
-Description: The package is used for computing bayesian distribution regression.
+Maintainer: Emmanuel S Tsyawo <estsyawo@temple.edu>
+Description: The package is used for implementing three estimators of bayesian distribution regression in the authors' article "Bayesian Distribution Regression" which is also the recommended reference to cite for this package.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+Imports: MASS, sandwich, stats
 Suggests: testthat
 RoxygenNote: 6.0.1

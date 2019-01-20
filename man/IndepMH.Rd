@@ -4,8 +4,8 @@
 \alias{IndepMH}
 \title{Independence Metropolis-Hastings Algorithm}
 \usage{
-IndepMH(data, propob = NULL, posterior = NULL, iter = 15000,
-  burn = 1000, start = NULL, prior = "Uniform", mu = 0, sig = 10)
+IndepMH(data, propob = NULL, posterior = NULL, iter = 1500, burn = 500,
+  vscale = 1.5, start = NULL, prior = "Uniform", mu = 0, sig = 10)
 }
 \arguments{
 \item{data}{data required for the posterior distribution}
@@ -15,9 +15,12 @@ IndepMH(data, propob = NULL, posterior = NULL, iter = 15000,
 \item{posterior}{the posterior distribution. It is set to null in order to use the logit posterior.
 The user can specify log posterior as a function of parameters and data (pars,data)}
 
-\item{iter}{number of random draws desired (default: 15000)}
+\item{iter}{number of random draws desired (default: 1500)}
 
-\item{burn}{burn-in period for the Random Walk MH algorithm (default: 1000)}
+\item{burn}{burn-in period for the MH algorithm (default: 500)}
+
+\item{vscale}{a positive value to scale up or down the variance-covariance matrix in
+the proposal distribution}
 
 \item{start}{starting values of parameters for the MH algorithm.
 It is automatically generated but the user can also specify.}
@@ -33,14 +36,15 @@ val a list of matrix of draws pardraws and the acceptance rate
 }
 \description{
 \code{IndepMH} computes random draws of parameters using a specified proposal distribution.
-The default is the normal distribution
 }
 \examples{
-# data = genmle::dat_mroz
-# propob<- lapl_aprx(data[,1],data[,-1])
-# IndepMHob<- IndepMH(data=data,propob,iter=3000) # prior="Normal"
-# system.time(IndepMHob<- IndepMH(data=data),iter=3000) # time operation
-# IndepMHob<- IndepMH(data=data,propob,prior="Uniform",iter=3000)
-# IndepMHob<- IndepMH(data=data,propob,iter=3000) # a higher number of draws
+# y = indicat(faithful$waiting,70)
+# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+# data = data.frame(y,x)
+# propob<- lapl_aprx(y,x)
+# IndepMH_n<- IndepMH(data=data,propob) # prior="Normal"
+# IndepMH_u<- IndepMH(data=data,propob,prior="Uniform") # prior="Uniform"
+# par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,hist))
+# invisible(apply(IndepMH_u$Matpram,2,hist));par(mfrow=c(1,1))
 
 }

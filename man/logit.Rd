@@ -7,21 +7,15 @@
 logit(start, data, Log = TRUE)
 }
 \arguments{
-\item{start}{starting values}
+\item{start}{vector of starting values}
 
 \item{data}{dataframe. The first column should be the dependent variable.}
 
-\item{Log}{a logical input (default True) to take the log of the likelihood. Only set 
-FALSE if you do not need the default TRUE}
+\item{Log}{a logical input (defaults to \code{True}) to take the log of the likelihood.}
 }
 \value{
 like returns the likelihood function value.
 }
 \description{
 \code{logit} is the logistic likelihood function given data.
-}
-\examples{
-# vv<- logit(start=rep(0,5),data = genmle::dat_mroz) # log-likelihood
-# vv1<- logit(start=rep(0,5),data = genmle::dat_mroz,Log = F)# likelihood
-
 }

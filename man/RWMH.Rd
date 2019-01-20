@@ -4,11 +4,11 @@
 \alias{RWMH}
 \title{Random Walk Metropolis-Hastings Algorithm}
 \usage{
-RWMH(data, propob = NULL, posterior = NULL, iter = 15000, burn = 1000,
-  start = NULL, prior = "Normal", mu = 0, sig = 10)
+RWMH(data, propob = NULL, posterior = NULL, iter = 1500, burn = 500,
+  vscale = 1.5, start = NULL, prior = "Normal", mu = 0, sig = 10)
 }
 \arguments{
-\item{data}{data required for the posterior distribution}
+\item{data}{data required for the posterior distribution. First column is the outcome}
 
 \item{propob}{a list of mean and variance-covariance of the normal proposal distribution
 (default: NULL i.e. internally generated)}
@@ -16,12 +16,15 @@ RWMH(data, propob = NULL, posterior = NULL, iter = 15000, burn = 1000,
 \item{posterior}{the posterior distribution. It is set to null in order to use the logit posterior.
 The user can specify log posterior as a function of parameters and data (pars,data)}
 
-\item{iter}{number of random draws desired (default: 15000)}
+\item{iter}{number of random draws desired}
 
-\item{burn}{burn-in period for the Random Walk MH algorithm (default: 1000)}
+\item{burn}{burn-in period for the Random Walk MH algorithm}
+
+\item{vscale}{a positive value to scale up or down the variance-covariance matrix in
+the proposal distribution}
 
 \item{start}{starting values of parameters for the MH algorithm.
-It is automatically generated but the user can also specify.}
+It is automatically generated from the proposal distribution but the user can also specify.}
 
 \item{prior}{the prior distribution (default: "Normal", alternative: "Uniform")}
 
@@ -30,18 +33,20 @@ It is automatically generated but the user can also specify.}
 \item{sig}{the variance of the normal prior distribution (default:10)}
 }
 \value{
-val a list of matrix of draws pardraws and the acceptance rate
+val a list of matrix of draws Matpram and the acceptance rate
 }
 \description{
 \code{RWMH} computes random draws of parameters using a specified proposal distribution.
 The default is the normal distribution
 }
 \examples{
-# data = genmle::dat_mroz
-# propob<- lapl_aprx(data[,1],data[,-1])
-# RWMHob<- RWMH(data=data,propob) # prior="Normal"
-# system.time(RWMHob<- RWMH(data=data,propob)) # time operation
-# RWMHob<- RWMH(data=data,prior="Uniform")
-# RWMHob<- RWMH(data=data,iter=5000) # a higher number of draws
+# y = indicat(faithful$waiting,70)
+# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+# data = data.frame(y,x)
+# propob<- lapl_aprx(y,x)
+# RWMHob_n<- RWMH(data=data,propob) # prior="Normal"
+# RWMHob_u<- RWMH(data=data,propob,prior="Uniform")
+# par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,hist))
+# invisible(apply(RWMHob_u$Matpram,2,hist));par(mfrow=c(1,1))
 
 }

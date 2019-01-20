@@ -11,7 +11,7 @@ posterior(pars, data, Log = T, mu = 0, sig = 25, prior = "Normal")
 
 \item{data}{dataframe. The first column must be the binary dependent variable}
 
-\item{Log}{logical to take the log or not (default: TRUE)}
+\item{Log}{logical to take the log of the posterior.(defaults to TRUE)}
 
 \item{mu}{mean of prior of each parameter value in case the prior is Normal (default: 0)}
 
@@ -24,7 +24,7 @@ posterior(pars, data, Log = T, mu = 0, sig = 25, prior = "Normal")
 val value function of the posterior
 }
 \description{
-\code{posterior} computes the value of the posterior at parameter values pars
+\code{posterior} computes the value of the posterior at parameter values \code{pars}
 }
 \examples{
 # posterior(rep(0,5),genmle::dat_mroz,Log = F,mu=0,sig = 10,prior = "Normal") # no log
