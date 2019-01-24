@@ -4,7 +4,7 @@ Title: Bayesian Distribution Regression
 Version: 0.1.0
 Authors@R: c(
   person("Emmanuel", "Tsyawo", email = "estsyawo@temple.edu", role = c("aut","cre")), person("Weige", "Huang", email = "weige.huang@temple.edu", role=c("aut")))
-Maintainer: Emmanuel S Tsyawo <estsyawo@temple.edu>
+Maintainer: Emmanuel Tsyawo <estsyawo@temple.edu>
 Description: The package is used for implementing three estimators of bayesian distribution regression in the authors' article "Bayesian Distribution Regression" which is also the recommended reference to cite for this package.
 License: GPL-2
 Encoding: UTF-8
