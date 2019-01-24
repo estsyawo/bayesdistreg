@@ -4,8 +4,9 @@
 \alias{IndepMH}
 \title{Independence Metropolis-Hastings Algorithm}
 \usage{
-IndepMH(data, propob = NULL, posterior = NULL, iter = 1500, burn = 500,
-  vscale = 1.5, start = NULL, prior = "Uniform", mu = 0, sig = 10)
+IndepMH(data, propob = NULL, posterior = NULL, iter = 1500,
+  burn = 500, vscale = 1.5, start = NULL, prior = "Uniform",
+  mu = 0, sig = 10)
 }
 \arguments{
 \item{data}{data required for the posterior distribution}

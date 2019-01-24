@@ -4,7 +4,8 @@
 \alias{distreg_cfa.sas}
 \title{Semi-asymptotic counterfactual distribution}
 \usage{
-distreg_cfa.sas(ind, drabj, data, cft, cfIND, vcovfn = "vcov", iter = 1000)
+distreg_cfa.sas(ind, drabj, data, cft, cfIND, vcovfn = "vcov",
+  iter = 1000)
 }
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
