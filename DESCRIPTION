@@ -3,11 +3,11 @@ Type: Package
 Title: Bayesian Distribution Regression
 Version: 0.1.0
 Authors@R: c(
-  person("Emmanuel", "Tsyawo", email = "estsyawo@temple.edu", role = c("aut","cre")), person("Weige", "Huang", email = "weige.huang@temple.edu", role=c("aut")))
-Maintainer: Emmanuel Tsyawo <estsyawo@temple.edu>
-Description: The package is used for implementing three estimators of Bayesian distribution regression in the authors' article "Bayesian Distribution Regression" which is also the recommended reference to cite for this package.
+  person("Emmanuel", "S", "Tsyawo", email = "estsyawo@temple.edu", role = c("aut","cre")), person("Weige", "Huang", email = "weige.huang@temple.edu", role=c("aut")))
+Maintainer: Emmanuel S Tsyawo <estsyawo@temple.edu>
+Description: Implements Bayesian Distribution Regression methods. This package contains functions for three estimators (non-asymptotic, semi-asymptotic and asymptotic) and other related routines for Bayesian Distribution Regression (BDR) in the authors' article "Bayesian Distribution Regression" which is also the recommended reference to cite for this package. The functions can be grouped into three (3) categories. The first computes the logit likelihood function and posterior densities under uniform and normal priors. The second contains Independence and Random Walk Metropolis-Hastings Markov Chain Monte Carlo (MCMC) algorithms as functions and the third category of functions are useful for semi-asymptotic and asymptotic inference for distribution regression.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports: MASS, sandwich, stats
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
