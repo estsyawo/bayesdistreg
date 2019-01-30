@@ -48,8 +48,8 @@ distreg<- function(thresh,data0,MH="IndepMH",...){
 #' cfIND=2 #Note: the first column is the outcome variable. 
 #' cft=0.95*data0[,cfIND] # a decrease by 5%
 #' dist_cfa<- distreg_cfa(qnt,data0,cft,cfIND,MH="IndepMH",iter = 102, burn = 2)
-#' par(mfrow=c(1,2)); plot(density(dist_cfa$counterfactual),main="Original")
-#' plot(density(dist_cfa$counterfactual),main="Counterfactual"); par(mfrow=c(1,1))
+#' par(mfrow=c(1,2)); plot(density(dist_cfa$counterfactual,10),main="Original")
+#' plot(density(dist_cfa$counterfactual,10),main="Counterfactual"); par(mfrow=c(1,1))
 #' 
 #' @export
 distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
@@ -84,7 +84,7 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' @examples
 #' data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
 #' out<- par_distreg(qnts,data0,no_cores=1,iter = 102, burn = 2)
-#' par(mfrow=c(3,2));invisible(apply(out,1,hist));par(mfrow=c(1,1))
+#' par(mfrow=c(3,2));invisible(apply(out,1,function(x)plot(density(x,30))));par(mfrow=c(1,1))
 #'
 #' @export
 par_distreg<-function(thresh,data0,fn=distreg,no_cores=1,type = "FORK",...){ #takes a vector of threshold values
@@ -143,8 +143,8 @@ dr_asympar<- function(y,x,thresh,...){
 #' drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
 #' drsas1 = lapply(1:5,distreg.sas,drabj=drabj,data=data,iter=100)
 #' drsas2 = lapply(1:5,distreg.sas,drabj=drabj,data=data,vcovfn="vcovHC",iter=100)
-#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas1[[i]])}));par(mfrow=c(1,1))
-#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas2[[i]])}));par(mfrow=c(1,1))
+#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i)plot(density(drsas1[[i]],.1))));par(mfrow=c(1,1))
+#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i)plot(density(drsas2[[i]],.1))));par(mfrow=c(1,1))
 #' 
 #' @export
 #' 
