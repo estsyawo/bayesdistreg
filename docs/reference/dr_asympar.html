@@ -139,11 +139,60 @@ values</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># y = faithful$waiting
-# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-# qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
-# drabj<- dr_asympar(y=y,x=x,thresh = qtaus)
-# lapply(drabj,coef); lapply(drabj,vcov) # mean and covariance at respective threshold values
+    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>=</span> <span class='no'>faithful</span>$<span class='no'>waiting</span>
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/scale'>scale</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='no'>faithful</span>$<span class='no'>eruptions</span>,<span class='no'>faithful</span>$<span class='no'>eruptions</span>^<span class='fl'>2</span>))
+<span class='no'>qtaus</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/quantile'>quantile</a></span>(<span class='no'>y</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.05</span>,<span class='fl'>0.25</span>,<span class='fl'>0.5</span>,<span class='fl'>0.75</span>,<span class='fl'>0.95</span>))
+<span class='no'>drabj</span><span class='kw'>&lt;-</span> <span class='fu'>dr_asympar</span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>x</span><span class='kw'>=</span><span class='no'>x</span>,<span class='kw'>thresh</span> <span class='kw'>=</span> <span class='no'>qtaus</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>drabj</span>,<span class='no'>coef</span>); <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>drabj</span>,<span class='no'>vcov</span>)</div><div class='output co'>#&gt; $`5%`
+#&gt; (Intercept)          X1          X2 
+#&gt;  -12.529504    7.552197  -16.412033 
+#&gt; 
+#&gt; $`25%`
+#&gt; (Intercept)          X1          X2 
+#&gt;   -6.222253    4.537972  -10.468049 
+#&gt; 
+#&gt; $`50%`
+#&gt; (Intercept)          X1          X2 
+#&gt;    2.048402  -13.100002    8.855666 
+#&gt; 
+#&gt; $`75%`
+#&gt; (Intercept)          X1          X2 
+#&gt;    2.522160   -6.544941    4.100806 
+#&gt; 
+#&gt; $`95%`
+#&gt; (Intercept)          X1          X2 
+#&gt;    8.356307  -21.168439   13.933436 
+#&gt; </div><div class='output co'>#&gt; $`5%`
+#&gt;             (Intercept)        X1        X2
+#&gt; (Intercept)    295.8311 -401.3021  648.1783
+#&gt; X1            -401.3021  568.4650 -904.5508
+#&gt; X2             648.1783 -904.5508 1446.7640
+#&gt; 
+#&gt; $`25%`
+#&gt;             (Intercept)        X1        X2
+#&gt; (Intercept)    8.957952 -16.91239  24.55477
+#&gt; X1           -16.912395  40.88275 -55.52501
+#&gt; X2            24.554773 -55.52501  76.72885
+#&gt; 
+#&gt; $`50%`
+#&gt;             (Intercept)         X1         X2
+#&gt; (Intercept)   0.9382644  -5.362741   4.168658
+#&gt; X1           -5.3627412  33.586619 -26.632828
+#&gt; X2            4.1686583 -26.632828  21.260327
+#&gt; 
+#&gt; $`75%`
+#&gt;             (Intercept)        X1         X2
+#&gt; (Intercept)   0.3778717  -1.93365   1.464948
+#&gt; X1           -1.9336498  13.05132 -10.482798
+#&gt; X2            1.4649478 -10.48280   8.539182
+#&gt; 
+#&gt; $`95%`
+#&gt;             (Intercept)        X1        X2
+#&gt; (Intercept)    36.33379 -165.7202  120.2247
+#&gt; X1           -165.72018  773.3070 -564.5566
+#&gt; X2            120.22469 -564.5566  412.9514
+#&gt; </div><div class='input'># mean and covariance at respective threshold values
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

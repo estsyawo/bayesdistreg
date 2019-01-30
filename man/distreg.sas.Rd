@@ -4,7 +4,7 @@
 \alias{distreg.sas}
 \title{Semi-asymptotic bayesian distribution}
 \usage{
-distreg.sas(ind, drabj, data, vcovfn = "vcov", iter = 1000)
+distreg.sas(ind, drabj, data, vcovfn = "vcov", iter = 100)
 }
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
@@ -27,12 +27,13 @@ distribution. This involves taking random draws from the normal approximation of
 posterior at each threshold value.
 }
 \examples{
-# y = faithful$waiting
-# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-# qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
-# drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
-# drsas1 = lapply(1:5,distreg.sas,drabj=drabj,data=data)
-# drsas2 = lapply(1:5,distreg.sas,drabj=drabj,data=data,vcovfn="vcovHC")
-# par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas1[[i]])}));par(mfrow=c(1,1))
-# par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas2[[i]])}));par(mfrow=c(1,1))
+y = faithful$waiting
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+drsas1 = lapply(1:5,distreg.sas,drabj=drabj,data=data,iter=100)
+drsas2 = lapply(1:5,distreg.sas,drabj=drabj,data=data,vcovfn="vcovHC",iter=100)
+par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas1[[i]])}));par(mfrow=c(1,1))
+par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas2[[i]])}));par(mfrow=c(1,1))
+
 }

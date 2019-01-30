@@ -132,6 +132,11 @@
     <p>like returns the likelihood function value.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>=</span> <span class='fu'><a href='indicat.html'>indicat</a></span>(<span class='no'>faithful</span>$<span class='no'>waiting</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/mean'>mean</a></span>(<span class='no'>faithful</span>$<span class='no'>waiting</span>))
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/scale'>scale</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='no'>faithful</span>$<span class='no'>eruptions</span>,<span class='no'>faithful</span>$<span class='no'>eruptions</span>^<span class='fl'>2</span>))
+<span class='no'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='no'>y</span>,<span class='no'>x</span>)
+<span class='fu'>logit</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>0</span>,<span class='fl'>3</span>),<span class='no'>data</span>)</div><div class='output co'>#&gt; [1] -188.536</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -139,7 +144,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

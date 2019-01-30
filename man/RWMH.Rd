@@ -41,13 +41,12 @@ val a list of matrix of draws Matpram and the acceptance rate
 The default is the normal distribution
 }
 \examples{
-# y = indicat(faithful$waiting,70)
-# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-# data = data.frame(y,x)
-# propob<- lapl_aprx(y,x)
-# RWMHob_n<- RWMH(data=data,propob) # prior="Normal"
-# RWMHob_u<- RWMH(data=data,propob,prior="Uniform")
-# par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,hist))
-# invisible(apply(RWMHob_u$Matpram,2,hist));par(mfrow=c(1,1))
+y = indicat(faithful$waiting,70)
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+data = data.frame(y,x); propob<- lapl_aprx(y,x)
+RWMHob_n<- RWMH(data=data,propob,iter = 102, burn = 2) # prior="Normal"
+RWMHob_u<- RWMH(data=data,propob,prior="Uniform",iter = 102, burn = 2)
+par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,hist))
+invisible(apply(RWMHob_u$Matpram,2,hist));par(mfrow=c(1,1))
 
 }

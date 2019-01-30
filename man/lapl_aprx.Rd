@@ -22,8 +22,8 @@ This function generates mode and variance-covariance for a normal proposal
 distribution for the bayesian logit.
 }
 \examples{
-# y = indicat(faithful$waiting,mean(faithful$waiting)) 
-# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-# gg<- lapl_aprx(y,x)
+ y = indicat(faithful$waiting,mean(faithful$waiting)) 
+ x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+ gg<- lapl_aprx(y,x)
 
 }

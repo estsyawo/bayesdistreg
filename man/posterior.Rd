@@ -4,7 +4,8 @@
 \alias{posterior}
 \title{Posterior distribution}
 \usage{
-posterior(pars, data, Log = T, mu = 0, sig = 25, prior = "Normal")
+posterior(pars, data, Log = TRUE, mu = 0, sig = 25,
+  prior = "Normal")
 }
 \arguments{
 \item{pars}{parameter values}
@@ -27,8 +28,11 @@ val value function of the posterior
 \code{posterior} computes the value of the posterior at parameter values \code{pars}
 }
 \examples{
-# posterior(rep(0,5),genmle::dat_mroz,Log = F,mu=0,sig = 10,prior = "Normal") # no log
-# posterior(rep(0,5),genmle::dat_mroz,Log = T,mu=0,sig = 10,prior = "Normal") # log
-# posterior(rep(0,5),genmle::dat_mroz,Log = T) # use default values
+y = indicat(faithful$waiting,mean(faithful$waiting)) 
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+data = data.frame(y,x)
+posterior(rep(0,3),data,Log = FALSE,mu=0,sig = 10,prior = "Normal") # no log
+posterior(rep(0,3),data,Log = TRUE,mu=0,sig = 10,prior = "Normal") # log
+posterior(rep(0,3),data,Log = TRUE) # use default values
 
 }

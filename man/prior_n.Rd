@@ -22,7 +22,7 @@ val Product of probability values for each parameter
 This normal prior distribution is a product of univariate N(mu,sig)
 }
 \examples{
-# prior_n(rep(0,6),0,10,Log = T) #log of prior
-# prior_n(rep(0,6),0,10,Log = F) #no log
+prior_n(rep(0,6),0,10,Log = TRUE) #log of prior
+prior_n(rep(0,6),0,10,Log = FALSE) #no log
 
 }

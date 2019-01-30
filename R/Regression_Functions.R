@@ -10,9 +10,9 @@
 #' @return fitob a vector of fitted values corresponding to the distribution at threshold thresh
 #'
 #' @examples
-#' # data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
-#' # distob<- distreg(qnt,data0); hist(distob)
-
+#' data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
+#' distob<- distreg(qnt,data0,iter = 102, burn = 2); 
+#' plot(density(distob,10),main="Kernel density plot")
 #'
 #' @export
 distreg<- function(thresh,data0,MH="IndepMH",...){
@@ -44,11 +44,13 @@ distreg<- function(thresh,data0,MH="IndepMH",...){
 #' F(yo), counterfactual F(yo), and the parameters
 #'
 #' @examples
-#' # data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.5) #at the median of y
-#' # cfIND=2 #Note: the first column is the outcome variable. 
-#' # cft=0.95*data0[,cfIND] # a decrease by 5%
-#' # dist_cfa<- distreg_cfa(qnt,data0,cft,cfIND)
-#'
+#' data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
+#' cfIND=2 #Note: the first column is the outcome variable. 
+#' cft=0.95*data0[,cfIND] # a decrease by 5%
+#' dist_cfa<- distreg_cfa(qnt,data0,cft,cfIND,MH="IndepMH",iter = 102, burn = 2)
+#' par(mfrow=c(1,2)); plot(density(dist_cfa$counterfactual),main="Original")
+#' plot(density(dist_cfa$counterfactual),main="Counterfactual"); par(mfrow=c(1,1))
+#' 
 #' @export
 distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
   y = indicat(data0[,1],thresh) #create binary y
@@ -80,9 +82,9 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' @return mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
 #'
 #' @examples
-#' # data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
-#' # out<- par_distreg(qnts,data0,no_cores=3)
-#' # par(mfrow=c(3,2));invisible(apply(out,1,hist));par(mfrow=c(1,1))
+#' data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))
+#' out<- par_distreg(qnts,data0,no_cores=1,iter = 102, burn = 2)
+#' par(mfrow=c(3,2));invisible(apply(out,1,hist));par(mfrow=c(1,1))
 #'
 #' @export
 par_distreg<-function(thresh,data0,fn=distreg,no_cores=1,type = "FORK",...){ #takes a vector of threshold values
@@ -92,30 +94,6 @@ parallel::stopCluster(c1)
 mat<- t(mat); mat<- t(apply(mat,1,sort))
 return(mat)
 }
-
-#==============================================================================================#
-#' Parallel compute bayesian distribution regression
-#'
-#' \code{par_distreg3} function uses parallel computation to compute bayesian distribution regression for a given
-#' vector of threshold values and a data (with first column being the continuous dependent variable). It
-#' is suitable for all systems (including Windows)
-#'
-#' @param thresh vector of threshold values. ensure the min and the max generate enough zeros and ones.
-#' @param data0 the original data set with a continous dependent variable in the first column
-#' @param fn bayesian distribution regression function. the default is distreg provided in the package
-#' @param ... any additional input parameters to pass to fn
-#' @return mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
-#'
-#' @export
-par_distreg3<-function(thresh,data0,fn=distreg,...){ #takes a vector of threshold values
-  no_cores<-parallel::detectCores() - 1
-  c1<-parallel::makeCluster(no_cores, type = "PSOCK")
-  mat<- parallel::parSapply(c1,thresh,fn,data0=data0,...)
-  parallel::stopCluster(c1)
-  mat<- t(mat); mat<- t(apply(mat,1,sort))
-  return(mat)
-}
-
 #==============================================================================================#
 #' Binary glm object at several threshold values
 #' 
@@ -129,11 +107,13 @@ par_distreg3<-function(thresh,data0,fn=distreg,...){ #takes a vector of threshol
 #' @return a list of glm objects corresponding to \code{thresh}
 #' 
 #' @examples 
-#' # y = faithful$waiting
-#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-#' # qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
-#' # drabj<- dr_asympar(y=y,x=x,thresh = qtaus)
-#' # lapply(drabj,coef); lapply(drabj,vcov) # mean and covariance at respective threshold values
+#' y = faithful$waiting
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+#' drabj<- dr_asympar(y=y,x=x,thresh = qtaus)
+#' lapply(drabj,coef); lapply(drabj,vcov) 
+#' # mean and covariance at respective threshold values
+#' 
 #' @export
 #' 
 dr_asympar<- function(y,x,thresh,...){
@@ -157,17 +137,18 @@ dr_asympar<- function(y,x,thresh,...){
 #' @return fitob vector of random draws from density of F(yo) using semi-asymptotic BDR
 #' 
 #' @examples 
-#' # y = faithful$waiting
-#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-#' # qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
-#' # drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
-#' # drsas1 = lapply(1:5,distreg.sas,drabj=drabj,data=data)
-#' # drsas2 = lapply(1:5,distreg.sas,drabj=drabj,data=data,vcovfn="vcovHC")
-#' # par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas1[[i]])}));par(mfrow=c(1,1))
-#' # par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas2[[i]])}));par(mfrow=c(1,1))
+#' y = faithful$waiting
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+#' drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+#' drsas1 = lapply(1:5,distreg.sas,drabj=drabj,data=data,iter=100)
+#' drsas2 = lapply(1:5,distreg.sas,drabj=drabj,data=data,vcovfn="vcovHC",iter=100)
+#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas1[[i]])}));par(mfrow=c(1,1))
+#' par(mfrow=c(3,2));invisible(lapply(1:5,function(i){hist(drsas2[[i]])}));par(mfrow=c(1,1))
+#' 
 #' @export
 #' 
-distreg.sas<- function(ind,drabj,data,vcovfn="vcov",iter=1000){
+distreg.sas<- function(ind,drabj,data,vcovfn="vcov",iter=100){
   seed=ind
   set.seed(seed)
   mu = stats::coef(drabj[[ind]])
@@ -202,9 +183,20 @@ distreg.sas<- function(ind,drabj,data,vcovfn="vcov",iter=1000){
 #' @param iter number of draws to simulate
 #' @return fitob vector of random draws from density of F(yo) using semi-asymptotic BDR
 #' 
+#' @examples 
+#' y = faithful$waiting
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+#' drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+#' cfIND=2 #Note: the first column is the outcome variable. 
+#' cft=0.95*data[,cfIND] # a decrease by 5%
+#' cfa.sasobj<- distreg_cfa.sas(ind=2,drabj,data,cft,cfIND,vcovfn="vcov")
+#' par(mfrow=c(1,2)); plot(density(cfa.sasobj$original),main="Original")
+#' plot(density(cfa.sasobj$counterfactual),main="Counterfactual"); par(mfrow=c(1,1))
+#' 
 #' @export
 #' 
-distreg_cfa.sas<- function(ind,drabj,data,cft,cfIND,vcovfn="vcov",iter=1000){
+distreg_cfa.sas<- function(ind,drabj,data,cft,cfIND,vcovfn="vcov",iter=100){
   seed=ind
   set.seed(seed)
   mu = stats::coef(drabj[[ind]])
@@ -235,7 +227,14 @@ distreg_cfa.sas<- function(ind,drabj,data,cft,cfIND,vcovfn="vcov",iter=1000){
 #' @param vcovfn a string denoting the function to extract the variance-covariance. Defaults at
 #' "vcov". Other variance-covariance estimators in the sandwich package are usable.
 #' @param ... additional input to pass to \code{vcovfn}
-#' @return a mean vector \code{Fhat} and a variance-covariance matrix \code{varF}
+#' @return a mean \code{Fhat} and a variance \code{varF}
+#' 
+#' @examples 
+#' y = faithful$waiting
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+#' drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+#' (asymp.obj<- distreg.asymp(ind=2,drabj,data,vcovfn="vcov"))
 #' 
 #' @export
 #' 
@@ -271,7 +270,7 @@ distreg.asymp<- function(ind,drabj,data,vcovfn="vcov",...){
 #' 
 #' @param drabj object from dr_asympar()
 #' @param data dataframe, first column is the outcome
-#' @param jdF logical to return joint density across thresholds in drabj
+#' @param jdF logical to return joint density of F(yo) across thresholds in drabj
 #' @param vcovfn a string denoting the function to extract the variance-covariance. Defaults at
 #' "vcov". Other variance-covariance estimators in the sandwich package are usable.
 #' @param ... additional input to pass to \code{vcovfn}

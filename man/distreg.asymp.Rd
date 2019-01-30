@@ -19,8 +19,16 @@ distreg.asymp(ind, drabj, data, vcovfn = "vcov", ...)
 \item{...}{additional input to pass to \code{vcovfn}}
 }
 \value{
-a mean vector \code{Fhat} and a variance-covariance matrix \code{varF}
+a mean \code{Fhat} and a variance \code{varF}
 }
 \description{
 \code{distreg.asymp} takes input object from dr_asympar() for asymptotic bayesian distribution.
+}
+\examples{
+y = faithful$waiting
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+(asymp.obj<- distreg.asymp(ind=2,drabj,data,vcovfn="vcov"))
+
 }

@@ -22,7 +22,8 @@ fitob a vector of fitted values corresponding to the distribution at threshold t
 \code{distreg} draws randomly from the density of F(yo) at a threshold value yo
 }
 \examples{
-# data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
-# distob<- distreg(qnt,data0); hist(distob)
+data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
+distob<- distreg(qnt,data0,iter = 102, burn = 2); 
+plot(density(distob,10),main="Kernel density plot")
 
 }

@@ -19,3 +19,9 @@ like returns the likelihood function value.
 \description{
 \code{logit} is the logistic likelihood function given data.
 }
+\examples{
+y = indicat(faithful$waiting,mean(faithful$waiting)) 
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+data = data.frame(y,x)
+logit(rep(0,3),data)
+}

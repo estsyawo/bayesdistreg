@@ -5,7 +5,7 @@
 \title{Semi-asymptotic counterfactual distribution}
 \usage{
 distreg_cfa.sas(ind, drabj, data, cft, cfIND, vcovfn = "vcov",
-  iter = 1000)
+  iter = 100)
 }
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
@@ -31,4 +31,16 @@ fitob vector of random draws from density of F(yo) using semi-asymptotic BDR
 \code{distreg_cfa.sas} takes input object from dr_asympar() for counterfactual semi 
 asymptotic bayesian distribution. This involves taking random draws from the normal 
 approximation of the posterior at each threshold value.
+}
+\examples{
+y = faithful$waiting
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+cfIND=2 #Note: the first column is the outcome variable. 
+cft=0.95*data[,cfIND] # a decrease by 5\%
+cfa.sasobj<- distreg_cfa.sas(ind=2,drabj,data,cft,cfIND,vcovfn="vcov")
+par(mfrow=c(1,2)); plot(density(cfa.sasobj$original),main="Original")
+plot(density(cfa.sasobj$counterfactual),main="Counterfactual"); par(mfrow=c(1,1))
+
 }

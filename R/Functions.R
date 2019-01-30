@@ -43,7 +43,12 @@ LogitLink=base::Vectorize(LogitLink) # ensure usability with entire vectors
 #' @param data dataframe. The first column should be the dependent variable.
 #' @param Log a logical input (defaults to \code{True}) to take the log of the likelihood. 
 #' @return like returns the likelihood function value.
-#'
+#' 
+#' @examples
+#' y = indicat(faithful$waiting,mean(faithful$waiting)) 
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' data = data.frame(y,x)
+#' logit(rep(0,3),data)
 #' @export
 
 logit = function(start,data,Log=TRUE){
@@ -82,8 +87,8 @@ logit = function(start,data,Log=TRUE){
 #' @return val Product of probability values for each parameter
 #'
 #' @examples
-#' # prior_n(rep(0,6),0,10,Log = T) #log of prior
-#' # prior_n(rep(0,6),0,10,Log = F) #no log
+#' prior_n(rep(0,6),0,10,Log = TRUE) #log of prior
+#' prior_n(rep(0,6),0,10,Log = FALSE) #no log
 #'
 #' @export
 prior_n<- function(pars,mu,sig,Log=FALSE){
@@ -122,17 +127,20 @@ prior_u<- function(pars){
 #' @return val value function of the posterior
 #'
 #' @examples
-#' # posterior(rep(0,5),genmle::dat_mroz,Log = F,mu=0,sig = 10,prior = "Normal") # no log
-#' # posterior(rep(0,5),genmle::dat_mroz,Log = T,mu=0,sig = 10,prior = "Normal") # log
-#' # posterior(rep(0,5),genmle::dat_mroz,Log = T) # use default values
+#' y = indicat(faithful$waiting,mean(faithful$waiting)) 
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' data = data.frame(y,x)
+#' posterior(rep(0,3),data,Log = FALSE,mu=0,sig = 10,prior = "Normal") # no log
+#' posterior(rep(0,3),data,Log = TRUE,mu=0,sig = 10,prior = "Normal") # log
+#' posterior(rep(0,3),data,Log = TRUE) # use default values
 #'
 #' @export
-posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
+posterior<- function(pars,data,Log=TRUE,mu=0,sig=25,prior="Normal"){
   if(Log){
-    val = logit(pars,data,Log=T) +
+    val = logit(pars,data,Log=TRUE) +
       ifelse(identical("Normal",prior),prior_n(pars,mu,sig,Log=T),0)
   }else{
-    val = logit(pars,data,Log=F) *
+    val = logit(pars,data,Log=FALSE) *
       ifelse(identical("Normal",prior),prior_n(pars,mu,sig,Log=F),1)
   }
 
@@ -152,9 +160,9 @@ posterior<- function(pars,data,Log=T,mu=0,sig=25,prior="Normal"){
 #' proposal draws from the multivariate normal distribution.
 #'
 #' @examples
-#' # y = indicat(faithful$waiting,mean(faithful$waiting)) 
-#' # x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-#' # gg<- lapl_aprx(y,x)
+#'  y = indicat(faithful$waiting,mean(faithful$waiting)) 
+#'  x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#'  gg<- lapl_aprx(y,x)
 #'
 #' @export
 lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
@@ -203,7 +211,6 @@ lapl_aprx2<- function(y,x,family = "binomial",...){ #laplace approximation
 #' @return vec vector of fitted logit probabilities
 #'
 #' @export
-
 
 fitlogit<- function(pars,data){
   y=data[,1]; x=data[,-1]; 

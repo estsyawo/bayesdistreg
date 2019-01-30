@@ -39,13 +39,12 @@ val a list of matrix of draws pardraws and the acceptance rate
 \code{IndepMH} computes random draws of parameters using a specified proposal distribution.
 }
 \examples{
-# y = indicat(faithful$waiting,70)
-# x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
-# data = data.frame(y,x)
-# propob<- lapl_aprx(y,x)
-# IndepMH_n<- IndepMH(data=data,propob) # prior="Normal"
-# IndepMH_u<- IndepMH(data=data,propob,prior="Uniform") # prior="Uniform"
-# par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,hist))
-# invisible(apply(IndepMH_u$Matpram,2,hist));par(mfrow=c(1,1))
+y = indicat(faithful$waiting,70)
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+data = data.frame(y,x); propob<- lapl_aprx(y,x)
+IndepMH_n<- IndepMH(data=data,propob,iter = 102, burn = 2) # prior="Normal"
+IndepMH_u<- IndepMH(data=data,propob,prior="Uniform",iter = 102, burn = 2) # prior="Uniform"
+par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,hist))
+invisible(apply(IndepMH_u$Matpram,2,hist));par(mfrow=c(1,1))
 
 }

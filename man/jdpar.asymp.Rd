@@ -11,7 +11,7 @@ jdpar.asymp(drabj, data, jdF = FALSE, vcovfn = "vcovHC", ...)
 
 \item{data}{dataframe, first column is the outcome}
 
-\item{jdF}{logical to return joint density across thresholds in drabj}
+\item{jdF}{logical to return joint density of F(yo) across thresholds in drabj}
 
 \item{vcovfn}{a string denoting the function to extract the variance-covariance. Defaults at
 "vcov". Other variance-covariance estimators in the sandwich package are usable.}
