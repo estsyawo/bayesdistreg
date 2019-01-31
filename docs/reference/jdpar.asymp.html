@@ -149,6 +149,78 @@ thresholds and if <code>jdF=TRUE</code>,
 a mean vector <code>mnF</code> and a variance-covariance matrix <code>vcovF</code> of F(yo)</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>=</span> <span class='no'>faithful</span>$<span class='no'>waiting</span>
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/scale'>scale</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/cbind'>cbind</a></span>(<span class='no'>faithful</span>$<span class='no'>eruptions</span>,<span class='no'>faithful</span>$<span class='no'>eruptions</span>^<span class='fl'>2</span>))
+<span class='no'>qtaus</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/quantile'>quantile</a></span>(<span class='no'>y</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.05</span>,<span class='fl'>0.25</span>,<span class='fl'>0.5</span>,<span class='fl'>0.75</span>,<span class='fl'>0.95</span>))
+<span class='no'>drabj</span><span class='kw'>&lt;-</span> <span class='fu'><a href='dr_asympar.html'>dr_asympar</a></span>(<span class='kw'>y</span><span class='kw'>=</span><span class='no'>y</span>,<span class='kw'>x</span><span class='kw'>=</span><span class='no'>x</span>,<span class='kw'>thresh</span> <span class='kw'>=</span> <span class='no'>qtaus</span>); <span class='no'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='no'>y</span>,<span class='no'>x</span>)
+(<span class='no'>drjasy</span> <span class='kw'>=</span> <span class='fu'>jdpar.asymp</span>(<span class='kw'>drabj</span><span class='kw'>=</span><span class='no'>drabj</span>,<span class='kw'>data</span><span class='kw'>=</span><span class='no'>data</span>,<span class='kw'>jdF</span><span class='kw'>=</span><span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; $Theta
+#&gt;  [1] -12.529504   7.552197 -16.412033  -6.222253   4.537972 -10.468049
+#&gt;  [7]   2.048402 -13.100002   8.855666   2.522160  -6.544941   4.100806
+#&gt; [13]   8.356307 -21.168439  13.933436
+#&gt; 
+#&gt; $vcovpar
+#&gt;               [,1]         [,2]         [,3]        [,4]         [,5]
+#&gt;  [1,]  108.9067266 -155.2065192  246.3682334  0.13125022  -0.00209570
+#&gt;  [2,] -155.2065192  247.2232407 -378.4328698 -0.19510939   0.10646607
+#&gt;  [3,]  246.3682334 -378.4328698  586.0628795  0.30531646  -0.11268514
+#&gt;  [4,]    0.1312502   -0.1951094    0.3053165  3.15340158  -7.61883056
+#&gt;  [5,]   -0.0020957    0.1064661   -0.1126851 -7.61883056  29.30944645
+#&gt;  [6,]    0.1027580   -0.2605866    0.3516794 10.32514625 -36.16117443
+#&gt;  [7,]    0.5023403   -0.6909663    1.1066747  0.01920583  -0.04187999
+#&gt;  [8,]   -0.2583467    0.4558942   -0.6534718 -0.04081865   0.13236808
+#&gt;  [9,]    0.7602264   -1.1262124    1.7473638  0.05107603  -0.14468128
+#&gt; [10,]    0.6194481   -0.8426163    1.3581362  0.02002443  -0.03907318
+#&gt; [11,]   -1.0870316    1.5429345   -2.4450419 -0.05061806   0.12731614
+#&gt; [12,]    1.4389064   -2.0190087    3.2167802  0.05986334  -0.14321280
+#&gt; [13,]    2.0617833   -3.0299233    4.6124610  0.19154970  -0.47163981
+#&gt; [14,]   -7.9041868   11.8688397  -17.8356426 -0.84559049   2.15312222
+#&gt; [15,]    6.4465708   -9.5992343   14.5229972  0.63941363  -1.62396298
+#&gt;               [,6]          [,7]          [,8]          [,9]         [,10]
+#&gt;  [1,]   0.10275800  0.5023402688  -0.258346739   0.760226402  0.6194480693
+#&gt;  [2,]  -0.26058660 -0.6909662721   0.455894200  -1.126212389 -0.8426162830
+#&gt;  [3,]   0.35167944  1.1066747380  -0.653471805   1.747363817  1.3581362141
+#&gt;  [4,]  10.32514625  0.0192058269  -0.040818646   0.051076029  0.0200244265
+#&gt;  [5,] -36.16117443 -0.0418799935   0.132368083  -0.144681280 -0.0390731773
+#&gt;  [6,]  45.38227590  0.0546187366  -0.146545920   0.172436649  0.0547134404
+#&gt;  [7,]   0.05461874  0.4245404549  -2.495012901   1.971820088  0.0006279511
+#&gt;  [8,]  -0.14654592 -2.4950129015  17.847465782 -14.624882189 -0.0029906143
+#&gt;  [9,]   0.17243665  1.9718200875 -14.624882189  12.109001500  0.0022769653
+#&gt; [10,]   0.05471344  0.0006279511  -0.002990614   0.002276965  0.0889907723
+#&gt; [11,]  -0.16331240 -0.0038409754   0.030939625  -0.025922593 -0.3164031405
+#&gt; [12,]   0.18903782  0.0031144113  -0.026943359   0.022934557  0.2281976071
+#&gt; [13,]   0.49355090  0.0281009153  -0.088614670   0.055804039  0.0163908878
+#&gt; [14,]  -2.22750649 -0.1313575089   0.462125220  -0.305749115 -0.0737309628
+#&gt; [15,]   1.70002594  0.0961152521  -0.348146083   0.233371475  0.0533859902
+#&gt;              [,11]        [,12]         [,13]         [,14]         [,15]
+#&gt;  [1,] -1.087031557  1.438906449  2.061783e+00   -7.90418677    6.44657075
+#&gt;  [2,]  1.542934479 -2.019008685 -3.029923e+00   11.86883971   -9.59923432
+#&gt;  [3,] -2.445041891  3.216780217  4.612461e+00  -17.83564255   14.52299717
+#&gt;  [4,] -0.050618060  0.059863338  1.915497e-01   -0.84559049    0.63941363
+#&gt;  [5,]  0.127316142 -0.143212804 -4.716398e-01    2.15312222   -1.62396298
+#&gt;  [6,] -0.163312400  0.189037823  4.935509e-01   -2.22750649    1.70002594
+#&gt;  [7,] -0.003840975  0.003114411  2.810092e-02   -0.13135751    0.09611525
+#&gt;  [8,]  0.030939625 -0.026943359 -8.861467e-02    0.46212522   -0.34814608
+#&gt;  [9,] -0.025922593  0.022934557  5.580404e-02   -0.30574912    0.23337148
+#&gt; [10,] -0.316403140  0.228197607  1.639089e-02   -0.07373096    0.05338599
+#&gt; [11,]  4.510830091 -4.055196765 -2.027979e-02    0.12899538   -0.10171321
+#&gt; [12,] -4.055196765  3.724876360  3.057156e-03   -0.04907088    0.04353567
+#&gt; [13,] -0.020279793  0.003057156  3.141960e+01 -155.15256215  115.34941957
+#&gt; [14,]  0.128995383 -0.049070877 -1.551526e+02  783.42357303 -585.62768957
+#&gt; [15,] -0.101713205  0.043535671  1.153494e+02 -585.62768957  438.43861272
+#&gt; 
+#&gt; $mnF
+#&gt; [1] 0.05882353 0.25735294 0.52573529 0.78308824 0.95588235
+#&gt; 
+#&gt; $vcovF
+#&gt;              [,1]         [,2]         [,3]         [,4]         [,5]
+#&gt; [1,] 1.202606e-03 4.971103e-06 6.092426e-07 1.045437e-06 1.042017e-08
+#&gt; [2,] 4.971103e-06 1.719992e-03 2.443587e-06 2.216778e-06 1.792418e-07
+#&gt; [3,] 6.092426e-07 2.443587e-06 1.509185e-03 5.525976e-06 3.926673e-06
+#&gt; [4,] 1.045437e-06 2.216778e-06 5.525976e-06 1.744816e-03 4.359817e-06
+#&gt; [5,] 1.042017e-08 1.792418e-07 3.926673e-06 4.359817e-06 9.716957e-04
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -156,7 +228,9 @@ a mean vector <code>mnF</code> and a variance-covariance matrix <code>vcovF</cod
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

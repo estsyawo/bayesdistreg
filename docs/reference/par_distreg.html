@@ -110,8 +110,8 @@ vector of threshold values and a data (with first column being the continuous ou
     
     </div>
 
-    <pre class="usage"><span class='fu'>par_distreg</span>(<span class='no'>thresh</span>, <span class='no'>data0</span>, <span class='kw'>fn</span> <span class='kw'>=</span> <span class='no'>distreg</span>, <span class='kw'>no_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"FORK"</span>,
-  <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>par_distreg</span>(<span class='no'>thresh</span>, <span class='no'>data0</span>, <span class='kw'>fn</span> <span class='kw'>=</span> <span class='no'>distreg</span>, <span class='kw'>no_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"PSOCK"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,7 +134,7 @@ vector of threshold values and a data (with first column being the continuous ou
     </tr>
     <tr>
       <th>type</th>
-      <td><p><code>type</code> passed to <code>makeCluster()</code> in the packagae <code>parallel</code></p></td>
+      <td><p><code>type</code> passed to <code>makeCluster()</code> in the package <code>parallel</code></p></td>
     </tr>
     <tr>
       <th>...</th>

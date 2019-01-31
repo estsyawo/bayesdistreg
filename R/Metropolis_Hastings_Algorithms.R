@@ -26,15 +26,15 @@
 #' data = data.frame(y,x); propob<- lapl_aprx(y,x)
 #' RWMHob_n<- RWMH(data=data,propob,iter = 102, burn = 2) # prior="Normal"
 #' RWMHob_u<- RWMH(data=data,propob,prior="Uniform",iter = 102, burn = 2)
-#' par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,hist))
-#' invisible(apply(RWMHob_u$Matpram,2,hist));par(mfrow=c(1,1))
+#' par(mfrow=c(3,1));invisible(apply(RWMHob_n$Matpram,2,function(x)plot(density(x))))
+#' invisible(apply(RWMHob_u$Matpram,2,function(x)plot(density(x))));par(mfrow=c(1,1))
 #'
 #' @export
 
 RWMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
                 start=NULL,prior="Normal",mu=0,sig=10){
   if(is.null(posterior)){
-    logpost<- function(start,data) posterior(start,data,Log=T,mu=mu,sig=sig,prior=prior)
+    logpost<- function(start,data) posterior(start,data,Log=TRUE,mu=mu,sig=sig,prior=prior)
   #define posterior distribution
   }
   if(is.null(propob)){
@@ -94,8 +94,8 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
 #' data = data.frame(y,x); propob<- lapl_aprx(y,x)
 #' IndepMH_n<- IndepMH(data=data,propob,iter = 102, burn = 2) # prior="Normal"
 #' IndepMH_u<- IndepMH(data=data,propob,prior="Uniform",iter = 102, burn = 2) # prior="Uniform"
-#' par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,hist))
-#' invisible(apply(IndepMH_u$Matpram,2,hist));par(mfrow=c(1,1))
+#' par(mfrow=c(3,1));invisible(apply(IndepMH_n$Matpram,2,function(x)plot(density(x))))
+#' invisible(apply(IndepMH_u$Matpram,2,function(x)plot(density(x))));par(mfrow=c(1,1))
 #'
 #' @export
 

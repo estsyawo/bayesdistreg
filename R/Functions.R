@@ -189,6 +189,11 @@ lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
 #' @param ... additional parameters to be passed to \code{glm()}
 #' @return val A list of mode variance-covariance matrix, and scale factor for
 #' proposal draws from the multivariate normal distribution.
+#' 
+#' @examples
+#' y = indicat(faithful$waiting,mean(faithful$waiting)) 
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' (gg<- lapl_aprx2(y,x)); coef(gg); vcov(gg)
 #'
 #' @export
 
@@ -294,11 +299,17 @@ quant_bdr<- function(taus,thresh,mat){
 #'
 #' @param DF the target distribution/quantile function as a vector
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
-#' indices elements in \code{DF}
+#' elements in \code{DF}
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
 #' @param scale logical for scaling using the inter-quartile range
 #' @return cstar - a constant to add and subtract from DF to create 
 #'  confidence bands if no scaling=FALSE else a vector of length DF.
+#'  
+#' @examples 
+#' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
+#' DF = apply(m,1,mean); plot(1:5,DF,type="l",ylim = c(0,max(m)), xlab = "Index")
+#' symCB<- simcnfB(DF,DFmat = m)
+#' lines(1:5,DF-symCB,lty=2); lines(1:5,DF+symCB,lty=2)
 #'
 #' @export
 #' 
@@ -325,11 +336,17 @@ simcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
 #'
 #' @param DF the target distribution/quantile function as a vector
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
-#' indices elements in \code{DF}
+#' elements in \code{DF}
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
 #' @param scale logical for scaling using the inter-quartile range
 #' @return cstar - a constant to add and subtract from DF to create 
 #'  confidence bands if no scaling=FALSE else a vector of length DF.
+#'  
+#' @examples 
+#' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
+#' DF = apply(m,1,mean); plot(1:5,DF,type="l",ylim = c(min(m),max(m)), xlab = "Index")
+#' asyCB<- asymcnfB(DF,DFmat = m)
+#' lines(1:5,DF-asyCB$cmin,lty=2); lines(1:5,DF+asyCB$cmax,lty=2)
 #'
 #' @export
 #' 
@@ -365,6 +382,13 @@ asymcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
 #' @param eps steps by which the grid on 1-alpha:alpha/2 is searched.
 #' @return CB - confidence band, zeta - the optimal level
+#' 
+#' @examples 
+#' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
+#' DF = apply(m,1,mean); plot(1:5,DF,type="l",ylim = c(min(m),max(m)), xlab = "Index")
+#' jOMCB<- jntCBOM(DF,DFmat = m)
+#' lines(1:5,jOMCB$CB[,1],lty=2); lines(1:5,jOMCB$CB[,2],lty=2)
+#' 
 #' @export
 #' 
 jntCBOM<- function(DF,DFmat,alpha=0.05,eps=1e-3){

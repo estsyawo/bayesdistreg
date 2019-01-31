@@ -4,8 +4,8 @@
 \alias{par_distreg}
 \title{Parallel compute bayesian distribution regression}
 \usage{
-par_distreg(thresh, data0, fn = distreg, no_cores = 1, type = "FORK",
-  ...)
+par_distreg(thresh, data0, fn = distreg, no_cores = 1,
+  type = "PSOCK", ...)
 }
 \arguments{
 \item{thresh}{vector of threshold values.}
@@ -16,7 +16,7 @@ par_distreg(thresh, data0, fn = distreg, no_cores = 1, type = "FORK",
 
 \item{no_cores}{number of cores for parallel computation}
 
-\item{type}{\code{type} passed to \code{makeCluster()} in the packagae \code{parallel}}
+\item{type}{\code{type} passed to \code{makeCluster()} in the package \code{parallel}}
 
 \item{...}{any additional input parameters to pass to fn}
 }

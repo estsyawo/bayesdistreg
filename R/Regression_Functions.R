@@ -12,7 +12,7 @@
 #' @examples
 #' data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
 #' distob<- distreg(qnt,data0,iter = 102, burn = 2); 
-#' plot(density(distob,10),main="Kernel density plot")
+#' plot(density(distob,.1),main="Kernel density plot")
 #'
 #' @export
 distreg<- function(thresh,data0,MH="IndepMH",...){
@@ -77,7 +77,7 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' @param data0 the original data set with a continous dependent variable in the first column
 #' @param fn bayesian distribution regression function. the default is distreg provided in the package
 #' @param no_cores number of cores for parallel computation
-#' @param type \code{type} passed to \code{makeCluster()} in the packagae \code{parallel}
+#' @param type \code{type} passed to \code{makeCluster()} in the package \code{parallel}
 #' @param ... any additional input parameters to pass to fn
 #' @return mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
 #'
@@ -87,7 +87,7 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' par(mfrow=c(3,2));invisible(apply(out,1,function(x)plot(density(x,30))));par(mfrow=c(1,1))
 #'
 #' @export
-par_distreg<-function(thresh,data0,fn=distreg,no_cores=1,type = "FORK",...){ #takes a vector of threshold values
+par_distreg<-function(thresh,data0,fn=distreg,no_cores=1,type = "PSOCK",...){ #takes a vector of threshold values
 c1<-parallel::makeCluster(no_cores, type = type)
 mat<- parallel::parSapply(c1,thresh,fn,data0=data0,...)
 parallel::stopCluster(c1)
@@ -191,8 +191,8 @@ distreg.sas<- function(ind,drabj,data,vcovfn="vcov",iter=100){
 #' cfIND=2 #Note: the first column is the outcome variable. 
 #' cft=0.95*data[,cfIND] # a decrease by 5%
 #' cfa.sasobj<- distreg_cfa.sas(ind=2,drabj,data,cft,cfIND,vcovfn="vcov")
-#' par(mfrow=c(1,2)); plot(density(cfa.sasobj$original),main="Original")
-#' plot(density(cfa.sasobj$counterfactual),main="Counterfactual"); par(mfrow=c(1,1))
+#' par(mfrow=c(1,2)); plot(density(cfa.sasobj$original,.1),main="Original")
+#' plot(density(cfa.sasobj$counterfactual,.1),main="Counterfactual"); par(mfrow=c(1,1))
 #' 
 #' @export
 #' 
@@ -277,6 +277,13 @@ distreg.asymp<- function(ind,drabj,data,vcovfn="vcov",...){
 #' @return mean vector Theta and variance-covariance matrix vcovpar of parameters across 
 #' thresholds and if \code{jdF=TRUE}, 
 #' a mean vector \code{mnF} and a variance-covariance matrix \code{vcovF} of F(yo)
+#' 
+#' @examples 
+#' y = faithful$waiting
+#' x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+#' qtaus = quantile(y,c(0.05,0.25,0.5,0.75,0.95))
+#' drabj<- dr_asympar(y=y,x=x,thresh = qtaus); data = data.frame(y,x)
+#' (drjasy = jdpar.asymp(drabj=drabj,data=data,jdF=TRUE))
 #' 
 #' @export
 #' 

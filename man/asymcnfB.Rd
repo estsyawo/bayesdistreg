@@ -10,7 +10,7 @@ asymcnfB(DF, DFmat, alpha = 0.05, scale = FALSE)
 \item{DF}{the target distribution/quantile function as a vector}
 
 \item{DFmat}{the matrix of draws of the distribution, rows correspond to 
-indices elements in \code{DF}}
+elements in \code{DF}}
 
 \item{alpha}{level such that \code{1-alpha} is the desired probability of coverage}
 
@@ -22,4 +22,11 @@ cstar - a constant to add and subtract from DF to create
 }
 \description{
 \code{asymcnfB} obtains asymmetric bayesian distribution confidence bands
+}
+\examples{
+set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
+DF = apply(m,1,mean); plot(1:5,DF,type="l",ylim = c(min(m),max(m)), xlab = "Index")
+asyCB<- asymcnfB(DF,DFmat = m)
+lines(1:5,DF-asyCB$cmin,lty=2); lines(1:5,DF+asyCB$cmax,lty=2)
+
 }

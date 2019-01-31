@@ -23,3 +23,9 @@ proposal draws from the multivariate normal distribution.
 \code{lapl_aprx2} is a more flexible alternative to \code{lapl_aprx}. This creates
 \code{glm} objects from which joint asymptotic distributions can be computed.
 }
+\examples{
+y = indicat(faithful$waiting,mean(faithful$waiting)) 
+x = scale(cbind(faithful$eruptions,faithful$eruptions^2))
+(gg<- lapl_aprx2(y,x)); coef(gg); vcov(gg)
+
+}
