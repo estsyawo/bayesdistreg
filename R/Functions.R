@@ -185,8 +185,8 @@ lapl_aprx<- function(y,x,glmobj=FALSE){ #laplace approximation
 #'
 #' @param y the binary dependent variable y
 #' @param x the matrix of independent variables.
-#' @param family a parameter to be passed \code{glm()}, defaults to the logit model
-#' @param ... additional parameters to be passed to \code{glm()}
+#' @param family a parameter to be passed \code{\link[stats]{glm}}, defaults to the logit model
+#' @param ... additional parameters to be passed to \code{\link[stats]{glm}}
 #' @return val A list of mode variance-covariance matrix, and scale factor for
 #' proposal draws from the multivariate normal distribution.
 #' 
@@ -273,11 +273,11 @@ out
 #================================================================================================#
 #' Quantile conversion of a bayesian distribution matrix
 #'
-#' \code{quant_bdr} converts a bayesian distribution regression matrix from \code{par_distreg()}
+#' \code{quant_bdr} converts a bayesian distribution regression matrix from \code{\link{par_distreg}}
 #' output to a matrix of quantile distribution.
 #'
 #' @param taus a vector of quantile indices
-#' @param thresh a vector of threshold values used in a \code{par_distreg()} type function
+#' @param thresh a vector of threshold values used in a \code{\link{par_distreg}} type function
 #' @param mat bayesian distribution regression output matrix
 #' @return qmat matrix of quantile distribution
 #'
@@ -332,15 +332,18 @@ simcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
 #=====================================================================================================#
 #' Asymmetric simultaneous bayesian confidence bands
 #'
-#' \code{asymcnfB} obtains asymmetric bayesian distribution confidence bands
+#' \code{asymcnfB} obtains asymmetric bayesian confidence bands on a target function
 #'
 #' @param DF the target distribution/quantile function as a vector
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
 #' elements in \code{DF}
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
 #' @param scale logical for scaling using the inter-quartile range
-#' @return cstar - a constant to add and subtract from DF to create 
-#'  confidence bands if no scaling=FALSE else a vector of length DF.
+#' @return a list containing 
+#' \itemize{
+#' \item cmin - constant to subtract from \code{DF} for the lower confidence band
+#' \item cmax - constant to add to \code{DF} for the upper confidence band
+#' }
 #'  
 #' @examples 
 #' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5

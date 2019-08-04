@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="Bayesian distribution regression — distreg" />
 
-<meta property="og:description" content="distreg draws randomly from the density of F(yo) at a threshold value yo" />
+<meta property="og:description" content="distreg draws randomly from the density of F(yo) at a threshold value yo, i.e. the 
+distribution function at a threshold" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesdistreg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -104,7 +105,8 @@
 
     <div class="ref-description">
     
-    <p><code>distreg</code> draws randomly from the density of F(yo) at a threshold value yo</p>
+    <p><code>distreg</code> draws randomly from the density of F(yo) at a threshold value yo, i.e. the 
+distribution function at a threshold</p>
     
     </div>
 
@@ -115,15 +117,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>thresh</th>
-      <td><p>threshold value that is used to binarise the continuous outcome variable</p></td>
+      <td><p>threshold value that is used to binarise the outcome variable</p></td>
     </tr>
     <tr>
       <th>data0</th>
-      <td><p>original data set with the first column being the continuous outcome variable</p></td>
+      <td><p>original data set with the first column being the outcome variable</p></td>
     </tr>
     <tr>
       <th>MH</th>
-      <td><p>metropolis-hastings algorithm to use; default:"IndepMH", alternative "RWMH"</p></td>
+      <td><p>Metropolis-Hastings algorithm to use; default:"IndepMH", alternative "RWMH"</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -133,7 +135,7 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>fitob a vector of fitted values corresponding to the distribution at threshold thresh</p>
+    <p>fitob a vector of fitted values corresponding to the distribution at threshold <code>thresh</code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

@@ -17,11 +17,14 @@ elements in \code{DF}}
 \item{scale}{logical for scaling using the inter-quartile range}
 }
 \value{
-cstar - a constant to add and subtract from DF to create 
- confidence bands if no scaling=FALSE else a vector of length DF.
+a list containing 
+\itemize{
+\item cmin - constant to subtract from \code{DF} for the lower confidence band
+\item cmax - constant to add to \code{DF} for the upper confidence band
+}
 }
 \description{
-\code{asymcnfB} obtains asymmetric bayesian distribution confidence bands
+\code{asymcnfB} obtains asymmetric bayesian confidence bands on a target function
 }
 \examples{
 set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5

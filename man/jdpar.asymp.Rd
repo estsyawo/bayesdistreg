@@ -7,7 +7,7 @@
 jdpar.asymp(drabj, data, jdF = FALSE, vcovfn = "vcovHC", ...)
 }
 \arguments{
-\item{drabj}{object from dr_asympar()}
+\item{drabj}{object from \code{\link{dr_asympar}}}
 
 \item{data}{dataframe, first column is the outcome}
 
@@ -24,7 +24,7 @@ thresholds and if \code{jdF=TRUE},
 a mean vector \code{mnF} and a variance-covariance matrix \code{vcovF} of F(yo)
 }
 \description{
-\code{jdpar.asymp} takes input object from dr_asympar() for asymptotic bayesian distribution.
+\code{jdpar.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 It returns objects for joint mutivariate density of parameters across several thresholds.
 Check for positive definiteness of the covariance matrix, else exclude thresholds yielding
 negative eigen values.

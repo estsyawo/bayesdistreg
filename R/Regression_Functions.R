@@ -1,13 +1,14 @@
 #==============================================================================================#
 #' Bayesian distribution regression
 #'
-#' \code{distreg} draws randomly from the density of F(yo) at a threshold value yo
+#' \code{distreg} draws randomly from the density of F(yo) at a threshold value yo, i.e. the 
+#' distribution function at a threshold
 #'
-#' @param thresh threshold value that is used to binarise the continuous outcome variable
-#' @param data0 original data set with the first column being the continuous outcome variable
-#' @param MH metropolis-hastings algorithm to use; default:"IndepMH", alternative "RWMH"
+#' @param thresh threshold value that is used to binarise the outcome variable
+#' @param data0 original data set with the first column being the outcome variable
+#' @param MH Metropolis-Hastings algorithm to use; default:"IndepMH", alternative "RWMH"
 #' @param ... any additional inputs to pass to the MH algorithm
-#' @return fitob a vector of fitted values corresponding to the distribution at threshold thresh
+#' @return fitob a vector of fitted values corresponding to the distribution at threshold \code{thresh}
 #'
 #' @examples
 #' data0=faithful[,c(2,1)]; qnt<-quantile(data0[,1],0.25)
@@ -33,9 +34,9 @@ distreg<- function(thresh,data0,MH="IndepMH",...){
 #' \code{distreg} draws randomly from the density of counterfactual of F(yo) at a threshold 
 #' value yo
 #'
-#' @param thresh threshold value that is used to binarise the continuous outcome variable
-#' @param data0 original data set with the first column being the continuous outcome variable
-#' @param MH metropolis-hastings algorithm to use; default:"IndepMH", alternative "RWMH"
+#' @param thresh threshold value that is used to binarise the outcome variable
+#' @param data0 original data set with the first column being the outcome variable
+#' @param MH Metropolis-Hastings algorithm to use; default:"IndepMH", alternative "RWMH"
 #' @param cft column vector of counterfactual treatment
 #' @param cfIND the column index(indices) of treatment variable(s) to replace with \code{cft} 
 #' in \code{data0}
@@ -71,13 +72,13 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' Parallel compute bayesian distribution regression
 #'
 #' \code{par_distreg} uses parallel computation to compute bayesian distribution regression for a given
-#' vector of threshold values and a data (with first column being the continuous outcome variable)
+#' vector of threshold values and a data (with first column being the outcome variable)
 #'
 #' @param thresh vector of threshold values.
 #' @param data0 the original data set with a continous dependent variable in the first column
 #' @param fn bayesian distribution regression function. the default is distreg provided in the package
 #' @param no_cores number of cores for parallel computation
-#' @param type \code{type} passed to \code{makeCluster()} in the package \code{parallel}
+#' @param type \code{type} passed to \code{\link[parallel]{makeCluster}} in the package \code{parallel}
 #' @param ... any additional input parameters to pass to fn
 #' @return mat a G x M matrix of output (G is the length of thresh, M is the number of draws)
 #'
@@ -124,12 +125,12 @@ dr_asympar<- function(y,x,thresh,...){
 #==============================================================================================#
 #' Semi-asymptotic bayesian distribution
 #' 
-#' \code{distreg.sas} takes input object from dr_asympar() for semi asymptotic bayesian 
+#' \code{distreg.sas} takes input object from \code{\link{dr_asympar}} for semi asymptotic bayesian 
 #' distribution. This involves taking random draws from the normal approximation of the 
 #' posterior at each threshold value.
 #' 
 #' @param ind index of object in list \code{drabj} (i.e. a threshold value) from which to take draws
-#' @param drabj object from dr_asympar()
+#' @param drabj object from \code{\link{dr_asympar}}
 #' @param data dataframe, first column is the outcome
 #' @param vcovfn a string denoting the function to extract the variance-covariance. Defaults at
 #' "vcov". Other variance-covariance estimators in the sandwich package are usable.
@@ -168,12 +169,12 @@ distreg.sas<- function(ind,drabj,data,vcovfn="vcov",iter=100){
 #==============================================================================================#
 #' Semi-asymptotic counterfactual distribution
 #' 
-#' \code{distreg_cfa.sas} takes input object from dr_asympar() for counterfactual semi 
+#' \code{distreg_cfa.sas} takes input object from \code{\link{dr_asympar}} for counterfactual semi 
 #' asymptotic bayesian distribution. This involves taking random draws from the normal 
 #' approximation of the posterior at each threshold value.
 #' 
 #' @param ind index of object in list \code{drabj} (i.e. a threshold value) from which to take draws
-#' @param drabj object from dr_asympar()
+#' @param drabj object from \code{\link{dr_asympar}}
 #' @param data dataframe, first column is the outcome
 #' @param cft column vector of counterfactual treatment
 #' @param cfIND the column index(indices) of treatment variable(s) to replace with \code{cft} 
@@ -219,10 +220,10 @@ distreg_cfa.sas<- function(ind,drabj,data,cft,cfIND,vcovfn="vcov",iter=100){
 #==============================================================================================#
 #' Asymptotic distribution regression
 #' 
-#' \code{distreg.asymp} takes input object from dr_asympar() for asymptotic bayesian distribution.
+#' \code{distreg.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 #' 
 #' @param ind index of object in list \code{drabj} (i.e. a threshold value) from which to take draws
-#' @param drabj object from dr_asympar()
+#' @param drabj object from \code{\link{dr_asympar}}
 #' @param data dataframe, first column is the outcome
 #' @param vcovfn a string denoting the function to extract the variance-covariance. Defaults at
 #' "vcov". Other variance-covariance estimators in the sandwich package are usable.
@@ -263,12 +264,12 @@ distreg.asymp<- function(ind,drabj,data,vcovfn="vcov",...){
 #==============================================================================================#
 #' Joint asymptotic mutivariate density of parameters
 #' 
-#' \code{jdpar.asymp} takes input object from dr_asympar() for asymptotic bayesian distribution.
+#' \code{jdpar.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 #' It returns objects for joint mutivariate density of parameters across several thresholds.
 #' Check for positive definiteness of the covariance matrix, else exclude thresholds yielding
 #' negative eigen values.
 #' 
-#' @param drabj object from dr_asympar()
+#' @param drabj object from \code{\link{dr_asympar}}
 #' @param data dataframe, first column is the outcome
 #' @param jdF logical to return joint density of F(yo) across thresholds in drabj
 #' @param vcovfn a string denoting the function to extract the variance-covariance. Defaults at

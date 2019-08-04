@@ -16,7 +16,7 @@ par_distreg(thresh, data0, fn = distreg, no_cores = 1,
 
 \item{no_cores}{number of cores for parallel computation}
 
-\item{type}{\code{type} passed to \code{makeCluster()} in the package \code{parallel}}
+\item{type}{\code{type} passed to \code{\link[parallel]{makeCluster}} in the package \code{parallel}}
 
 \item{...}{any additional input parameters to pass to fn}
 }
@@ -25,7 +25,7 @@ mat a G x M matrix of output (G is the length of thresh, M is the number of draw
 }
 \description{
 \code{par_distreg} uses parallel computation to compute bayesian distribution regression for a given
-vector of threshold values and a data (with first column being the continuous outcome variable)
+vector of threshold values and a data (with first column being the outcome variable)
 }
 \examples{
 data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))

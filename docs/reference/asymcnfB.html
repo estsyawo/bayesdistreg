@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Asymmetric simultaneous bayesian confidence bands — asymcnfB" />
 
-<meta property="og:description" content="asymcnfB obtains asymmetric bayesian distribution confidence bands" />
+<meta property="og:description" content="asymcnfB obtains asymmetric bayesian confidence bands on a target function" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bayesdistreg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -104,7 +104,7 @@
 
     <div class="ref-description">
     
-    <p><code>asymcnfB</code> obtains asymmetric bayesian distribution confidence bands</p>
+    <p><code>asymcnfB</code> obtains asymmetric bayesian confidence bands on a target function</p>
     
     </div>
 
@@ -134,8 +134,11 @@ elements in <code>DF</code></p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>cstar - a constant to add and subtract from DF to create 
- confidence bands if no scaling=FALSE else a vector of length DF.</p>
+    <p>a list containing</p><ul>
+<li><p>cmin - constant to subtract from <code>DF</code> for the lower confidence band</p></li>
+<li><p>cmax - constant to add to <code>DF</code> for the upper confidence band</p></li>
+</ul>
+
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

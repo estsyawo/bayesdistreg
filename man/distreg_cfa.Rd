@@ -7,11 +7,11 @@
 distreg_cfa(thresh, data0, MH = "IndepMH", cft, cfIND, ...)
 }
 \arguments{
-\item{thresh}{threshold value that is used to binarise the continuous outcome variable}
+\item{thresh}{threshold value that is used to binarise the outcome variable}
 
-\item{data0}{original data set with the first column being the continuous outcome variable}
+\item{data0}{original data set with the first column being the outcome variable}
 
-\item{MH}{metropolis-hastings algorithm to use; default:"IndepMH", alternative "RWMH"}
+\item{MH}{Metropolis-Hastings algorithm to use; default:"IndepMH", alternative "RWMH"}
 
 \item{cft}{column vector of counterfactual treatment}
 

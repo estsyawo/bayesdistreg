@@ -9,7 +9,7 @@ distreg.sas(ind, drabj, data, vcovfn = "vcov", iter = 100)
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
 
-\item{drabj}{object from dr_asympar()}
+\item{drabj}{object from \code{\link{dr_asympar}}}
 
 \item{data}{dataframe, first column is the outcome}
 
@@ -22,7 +22,7 @@ distreg.sas(ind, drabj, data, vcovfn = "vcov", iter = 100)
 fitob vector of random draws from density of F(yo) using semi-asymptotic BDR
 }
 \description{
-\code{distreg.sas} takes input object from dr_asympar() for semi asymptotic bayesian 
+\code{distreg.sas} takes input object from \code{\link{dr_asympar}} for semi asymptotic bayesian 
 distribution. This involves taking random draws from the normal approximation of the 
 posterior at each threshold value.
 }

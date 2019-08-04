@@ -10,7 +10,7 @@ distreg_cfa.sas(ind, drabj, data, cft, cfIND, vcovfn = "vcov",
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
 
-\item{drabj}{object from dr_asympar()}
+\item{drabj}{object from \code{\link{dr_asympar}}}
 
 \item{data}{dataframe, first column is the outcome}
 
@@ -28,7 +28,7 @@ in \code{data0}}
 fitob vector of random draws from density of F(yo) using semi-asymptotic BDR
 }
 \description{
-\code{distreg_cfa.sas} takes input object from dr_asympar() for counterfactual semi 
+\code{distreg_cfa.sas} takes input object from \code{\link{dr_asympar}} for counterfactual semi 
 asymptotic bayesian distribution. This involves taking random draws from the normal 
 approximation of the posterior at each threshold value.
 }

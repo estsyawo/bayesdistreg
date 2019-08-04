@@ -9,7 +9,7 @@ distreg.asymp(ind, drabj, data, vcovfn = "vcov", ...)
 \arguments{
 \item{ind}{index of object in list \code{drabj} (i.e. a threshold value) from which to take draws}
 
-\item{drabj}{object from dr_asympar()}
+\item{drabj}{object from \code{\link{dr_asympar}}}
 
 \item{data}{dataframe, first column is the outcome}
 
@@ -22,7 +22,7 @@ distreg.asymp(ind, drabj, data, vcovfn = "vcov", ...)
 a mean \code{Fhat} and a variance \code{varF}
 }
 \description{
-\code{distreg.asymp} takes input object from dr_asympar() for asymptotic bayesian distribution.
+\code{distreg.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 }
 \examples{
 y = faithful$waiting

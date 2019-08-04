@@ -9,7 +9,7 @@ quant_bdr(taus, thresh, mat)
 \arguments{
 \item{taus}{a vector of quantile indices}
 
-\item{thresh}{a vector of threshold values used in a \code{par_distreg()} type function}
+\item{thresh}{a vector of threshold values used in a \code{\link{par_distreg}} type function}
 
 \item{mat}{bayesian distribution regression output matrix}
 }
@@ -17,6 +17,6 @@ quant_bdr(taus, thresh, mat)
 qmat matrix of quantile distribution
 }
 \description{
-\code{quant_bdr} converts a bayesian distribution regression matrix from \code{par_distreg()}
+\code{quant_bdr} converts a bayesian distribution regression matrix from \code{\link{par_distreg}}
 output to a matrix of quantile distribution.
 }

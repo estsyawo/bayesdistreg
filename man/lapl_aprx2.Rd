@@ -11,9 +11,9 @@ lapl_aprx2(y, x, family = "binomial", ...)
 
 \item{x}{the matrix of independent variables.}
 
-\item{family}{a parameter to be passed \code{glm()}, defaults to the logit model}
+\item{family}{a parameter to be passed \code{\link[stats]{glm}}, defaults to the logit model}
 
-\item{...}{additional parameters to be passed to \code{glm()}}
+\item{...}{additional parameters to be passed to \code{\link[stats]{glm}}}
 }
 \value{
 val A list of mode variance-covariance matrix, and scale factor for
