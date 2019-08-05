@@ -7,14 +7,14 @@
 jntCBOM(DF, DFmat, alpha = 0.05, eps = 0.001)
 }
 \arguments{
-\item{DF}{the target distribution/quantile function as a vector}
+\item{DF}{the target distribution/quantile function as a vector of length G}
 
 \item{DFmat}{the matrix of draws of the distribution, rows correspond to 
-indices elements in \code{DF}}
+elements in \code{DF}}
 
 \item{alpha}{level such that \code{1-alpha} is the desired probability of coverage}
 
-\item{eps}{steps by which the grid on 1-alpha:alpha/2 is searched.}
+\item{eps}{steps of the grid on the interval (alpha/(2*G),alpha/2) to search}
 }
 \value{
 CB - confidence band, zeta - the optimal level

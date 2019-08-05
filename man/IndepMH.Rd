@@ -11,10 +11,12 @@ IndepMH(data, propob = NULL, posterior = NULL, iter = 1500,
 \arguments{
 \item{data}{data required for the posterior distribution}
 
-\item{propob}{a list of mean and variance-covariance of the normal proposal distribution (default:NULL)}
+\item{propob}{a list of mean and variance-covariance of the normal proposal distribution; 
+defaults to \code{NULL}. Write list as propob=list(mode=mode,var=variance-covariance)}
 
 \item{posterior}{the posterior distribution. It is set to null in order to use the logit posterior.
-The user can specify log posterior as a function of parameters and data (pars,data)}
+The user can specify log posterior as a function of parameters and data (pars,data). For a more
+flexible and generic implementation, use \code{\link{indepMHgen}}}
 
 \item{iter}{number of random draws desired (default: 1500)}
 

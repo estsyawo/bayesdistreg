@@ -117,12 +117,12 @@ in Montiel Olea and Plagborg-Moller (2018).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>DF</th>
-      <td><p>the target distribution/quantile function as a vector</p></td>
+      <td><p>the target distribution/quantile function as a vector of length G</p></td>
     </tr>
     <tr>
       <th>DFmat</th>
       <td><p>the matrix of draws of the distribution, rows correspond to 
-indices elements in <code>DF</code></p></td>
+elements in <code>DF</code></p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -130,7 +130,7 @@ indices elements in <code>DF</code></p></td>
     </tr>
     <tr>
       <th>eps</th>
-      <td><p>steps by which the grid on 1-alpha:alpha/2 is searched.</p></td>
+      <td><p>steps of the grid on the interval (alpha/(2*G),alpha/2) to search</p></td>
     </tr>
     </table>
     

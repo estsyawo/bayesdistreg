@@ -253,8 +253,7 @@ fitdist<- function(Matparam,data){
 #================================================================================================#
 #' Parallel compute
 #'
-#' \code{parLply} uses \code{parlapply} from the \code{parallel} package with 
-#' a function as input
+#' \code{parLply} uses \code{\link[parallel]{parLapply}} with a function as input
 #'
 #' @param vec vector of inputs over which to parallel compute
 #' @param fn the function
@@ -278,18 +277,38 @@ out
 #'
 #' @param taus a vector of quantile indices
 #' @param thresh a vector of threshold values used in a \code{\link{par_distreg}} type function
-#' @param mat bayesian distribution regression output matrix
+#' @param mat bayesian distribution regression output matrix; columns should correspond to draws of
+#' the distribution function
 #' @return qmat matrix of quantile distribution
-#'
+#' 
+#' @examples 
+#' set.seed(2); Fmat = matrix(runif(1000),1000,10); taus = seq(0,1, length.out=1000)
+#' thresh = qnorm(taus)
+#' par(mfrow=c(1,2))
+#' plot(thresh,sort(apply(apply(Fmat,2,sort),1,mean)),type="l",xlab="y",ylab="F(y)",
+#' main="Distribution Function")
+#' qmat<- quant_bdr(taus,thresh,Fmat); plot(taus,apply(qmat,1,mean),type = "l",
+#' xlab="tau",ylab="Qy",main="Quantile Function")
+#' par(mfrow=c(1,1))
 #' @export
+
 quant_bdr<- function(taus,thresh,mat){
-  mat=t(apply(mat,1,sort)); 
-  q.inv<-function(j){
-    zg=stats::spline(x=sort(mat[,j]),y=thresh,xout = taus)
-    sort(zg$y)
-  } ; q.inv=Vectorize(q.inv)
-  qmat<-sapply(1:ncol(mat),q.inv)
-  qmat
+  # define function internally
+  f2q=function(fs,y0,qs){
+    qss=rep(0,length(qs))
+    for (i in 1:length(qs)) {
+      fs=fs[!is.na(fs)] # remove NA in a vector
+      if(max(fs) >= qs[i]){
+        qss[i]= y0[which(sort(fs) >= qs[i])[1]]
+      }
+      else {qss[i]=max(y0)}
+    }
+    qss
+  }
+  # define function internally
+  ffq<- function(j) f2q(fs=mat[,j],y0=thresh,qs=taus)
+  qmato<- sapply(1:ncol(mat), ffq)
+  qmato
 }
 
 #=====================================================================================================#
@@ -379,11 +398,11 @@ asymcnfB<- function(DF,DFmat,alpha=0.05,scale=FALSE){
 #' \code{jntCBOM} implements calibrated symmetric confidence bands (algorithm 2)
 #' in Montiel Olea and Plagborg-Moller (2018).
 #'
-#' @param DF the target distribution/quantile function as a vector
+#' @param DF the target distribution/quantile function as a vector of length G
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
-#' indices elements in \code{DF}
+#' elements in \code{DF}
 #' @param alpha level such that \code{1-alpha} is the desired probability of coverage
-#' @param eps steps by which the grid on 1-alpha:alpha/2 is searched.
+#' @param eps steps of the grid on the interval (alpha/(2*G),alpha/2) to search
 #' @return CB - confidence band, zeta - the optimal level
 #' 
 #' @examples 
@@ -406,4 +425,67 @@ jntCBOM<- function(DF,DFmat,alpha=0.05,eps=1e-3){
     zeta=zeta+eps
   }
   return(list(CB = vm,zeta=(zeta-eps)))
+}
+
+#===================================================================================================
+#'  A Bayesian "p-value"
+#'
+#' \code{psimval} finds a minimum alpha in the interval (0,1) such that the 1-alpha simultaneous 
+#' confidence band excludes the vector of DF. This is intended to be a summary value for a joint
+#' hypothesis test of equality. 
+#'
+#' @param DF the target vector; set to a vector of zeroes if a "p-value" is desired
+#' @param DFmat the matrix of draws of the distribution, rows correspond to 
+#' elements in \code{DF}
+#' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @param eps steps of the grid on the interval (0,1) to search
+#' @param typeband the type of confidence band to use: "sym" for \code{\link{simcnfB}}, 
+#' "asym" for \code{\link{asymcnfB}}, or "OM" for \code{\link{jntCBOM}} are supported.
+#' @return alf the "p-value"
+#' 
+#' @examples 
+#' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
+#' (pval<- round(psimval(DF=rep(0.1,5),DFmat = m,alpha=0.05,typeband="OM"),3))
+#' 
+#' @export
+#' 
+
+psimval<-function(DF,DFmat,alpha,eps=1e-04,typeband=c("sym","asym","OM")){
+  typeband<- match.arg(typeband)
+  if(typeband=="sym"){
+    fn=function(DF,DFmat,alpha){
+      c1a=simcnfB(DF=DF,DFmat = DFmat,alpha = alpha)  
+      list(lbCB=(DF-c1a),ubCB=(DF+c1a))
+    }
+  }else if(typeband=="asym"){
+    fn=function(DF,DFmat,alpha){
+      c1a=asymcnfB(DF=DF,DFmat = DFmat,alpha = alpha)  
+      list(lbCB=(DF-c1a$cmin),ubCB=(DF+c1a$cmax))
+    }
+  }else if(typeband=="OM"){
+    fn=function(DF,DFmat,alpha){
+      c1a=jntCBOM(DF=DF,DFmat = DFmat,alpha = alpha)  
+      list(lbCB=(c1a$CB[,1]),ubCB=(c1a$CB[,2]))
+    }
+  }
+  CB=fn(DF=DF,DFmat = DFmat,alpha = alpha)
+  
+  zg = !all((CB$lbCB)*(CB$ubCB)<=0)
+  alf = alpha
+  if(zg){ #deacrease alpha, else 
+    while(zg & alf>eps){
+      alf=alf-eps
+      CB=fn(DF=DF,DFmat = DFmat,alpha = alf)
+      zg = !all((CB$lbCB)*(CB$ubCB)<=0)
+    }
+    if(!zg){alf=alf+eps} #the last step violates; choose penultimate
+  }else{#increase alpha
+    while(!zg & alf<(1-eps)){
+      alf=alf+eps
+      CB=fn(DF=DF,DFmat = DFmat,alpha = alf)
+      zg = !all((CB$lbCB)*(CB$ubCB)<=0)
+    }
+    if(zg){alf=alf-eps} #the last step violates; choose penultimate
+  }
+  return(alf)
 }

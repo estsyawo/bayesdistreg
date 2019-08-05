@@ -124,12 +124,13 @@ The default is the normal distribution</p>
     <tr>
       <th>propob</th>
       <td><p>a list of mean and variance-covariance of the normal proposal distribution
-(default: NULL i.e. internally generated)</p></td>
+(default: NULL i.e. internally generated). Write list as propob=list(mode=mode,var=variance-covariance)</p></td>
     </tr>
     <tr>
       <th>posterior</th>
       <td><p>the posterior distribution. It is set to null in order to use the logit posterior.
-The user can specify log posterior as a function of parameters and data (pars,data)</p></td>
+The user can specify log posterior as a function of parameters and data (pars,data). For a more
+flexible and generic implementation, use <code><a href='rwMHgen.html'>rwMHgen</a></code></p></td>
     </tr>
     <tr>
       <th>iter</th>

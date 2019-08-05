@@ -26,7 +26,7 @@ a mean vector \code{mnF} and a variance-covariance matrix \code{vcovF} of F(yo)
 \description{
 \code{jdpar.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 It returns objects for joint mutivariate density of parameters across several thresholds.
-Check for positive definiteness of the covariance matrix, else exclude thresholds yielding
+Check for positive definiteness of the covariance matrix and exclude thresholds yielding
 negative eigen values.
 }
 \examples{

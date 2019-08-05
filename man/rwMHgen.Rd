@@ -5,7 +5,7 @@
 \title{A Generic Random Walk Metropolis-Hastings Algorithm}
 \usage{
 rwMHgen(start = NULL, posterior = NULL, ..., propob = NULL,
-  const = NULL, seed = 1, scale = 1.5, iter = 5000,
+  const = NULL, seed = 1, vscale = 1.5, iter = 5000,
   burn = floor(0.1 * iter), report = NULL)
 }
 \arguments{
@@ -18,13 +18,13 @@ Should take parameter input of the same length as \code{start} or \code{propob$m
 \item{...}{additional arguments to the posterior function}
 
 \item{propob}{a list of mode and variance-covariance matrix of the normal proposal distribution. 
-Save list as propob=list(mode=mode,var=variance-covariance)}
+Write list as propob=list(mode=mode,var=variance-covariance)}
 
 \item{const}{a vector function of parameters showing non-negative inequality constraints to be satisfied.}
 
 \item{seed}{an integer as seed for reproducibility}
 
-\item{scale}{a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
+\item{vscale}{a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
 set to the character string "HS18" for the Herbst and Shorfheide (2018) scale updating for a 0.25
 acceptance ratio.
 The default is \code{1.5} but the user can adjust it until a satisfactory acceptance rate is obtained.}
@@ -45,7 +45,7 @@ AcceptRatio the acceptance ratio
 }
 \description{
 \code{rwMHgen} computes random draws of parameters using a normal proposal distribution.
-This function implements a generic form of \code{RWMH} from the package \code{bayesdistreg}
+This function implements a generic form of \code{\link{RWMH}}
 }
 \examples{
 #a toy example for illustration
@@ -56,7 +56,7 @@ optp<-optim(par=c(0,0),fn=logpost,control=list(fnscale=-1),hessian = TRUE)
 # laplace approximation of the posterior
 propob = list(mode=optp$par,var=-solve(optp$hessian)) #parameters of proposal distribution
 eigen(propob$var)$values # var-cov of proposal distribution is positive definite
-MHobj<- rwMHgen(posterior = logpost,propob = propob,scale = "HS18",iter = 6000,report=1500)
+MHobj<- rwMHgen(posterior = logpost,propob = propob,vscale = "HS18",iter = 6000,report=1500)
 # create an independent Metropolis-Hastings object
 dim(MHobj$Matpram) # a 2 x 5000 matrix with columns corresponding to draws of c1 and c2
 par(mfrow=c(1,2))

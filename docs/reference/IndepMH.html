@@ -121,12 +121,14 @@
     </tr>
     <tr>
       <th>propob</th>
-      <td><p>a list of mean and variance-covariance of the normal proposal distribution (default:NULL)</p></td>
+      <td><p>a list of mean and variance-covariance of the normal proposal distribution; 
+defaults to <code>NULL</code>. Write list as propob=list(mode=mode,var=variance-covariance)</p></td>
     </tr>
     <tr>
       <th>posterior</th>
       <td><p>the posterior distribution. It is set to null in order to use the logit posterior.
-The user can specify log posterior as a function of parameters and data (pars,data)</p></td>
+The user can specify log posterior as a function of parameters and data (pars,data). For a more
+flexible and generic implementation, use <code><a href='indepMHgen.html'>indepMHgen</a></code></p></td>
     </tr>
     <tr>
       <th>iter</th>

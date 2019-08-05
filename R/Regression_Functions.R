@@ -72,10 +72,10 @@ distreg_cfa<- function(thresh,data0,MH="IndepMH",cft,cfIND,...){
 #' Parallel compute bayesian distribution regression
 #'
 #' \code{par_distreg} uses parallel computation to compute bayesian distribution regression for a given
-#' vector of threshold values and a data (with first column being the outcome variable)
+#' vector of threshold values and data (with first column being the outcome variable)
 #'
 #' @param thresh vector of threshold values.
-#' @param data0 the original data set with a continous dependent variable in the first column
+#' @param data0 the original data set with the dependent variable in the first column
 #' @param fn bayesian distribution regression function. the default is distreg provided in the package
 #' @param no_cores number of cores for parallel computation
 #' @param type \code{type} passed to \code{\link[parallel]{makeCluster}} in the package \code{parallel}
@@ -266,7 +266,7 @@ distreg.asymp<- function(ind,drabj,data,vcovfn="vcov",...){
 #' 
 #' \code{jdpar.asymp} takes input object from \code{\link{dr_asympar}} for asymptotic bayesian distribution.
 #' It returns objects for joint mutivariate density of parameters across several thresholds.
-#' Check for positive definiteness of the covariance matrix, else exclude thresholds yielding
+#' Check for positive definiteness of the covariance matrix and exclude thresholds yielding
 #' negative eigen values.
 #' 
 #' @param drabj object from \code{\link{dr_asympar}}

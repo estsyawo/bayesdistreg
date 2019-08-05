@@ -6,9 +6,10 @@
 #'
 #' @param data data required for the posterior distribution. First column is the outcome
 #' @param propob a list of mean and variance-covariance of the normal proposal distribution
-#' (default: NULL i.e. internally generated)
+#' (default: NULL i.e. internally generated). Write list as propob=list(mode=mode,var=variance-covariance)
 #' @param posterior the posterior distribution. It is set to null in order to use the logit posterior.
-#' The user can specify log posterior as a function of parameters and data (pars,data)
+#' The user can specify log posterior as a function of parameters and data (pars,data). For a more
+#' flexible and generic implementation, use \code{\link{rwMHgen}}
 #' @param iter number of random draws desired
 #' @param burn burn-in period for the Random Walk MH algorithm
 #' @param vscale a positive value to scale up or down the variance-covariance matrix in
@@ -36,7 +37,7 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
   if(is.null(posterior)){
     logpost<- function(start,data) posterior(start,data,Log=TRUE,mu=mu,sig=sig,prior=prior)
   #define posterior distribution
-  }
+  }else{logpost=function(start,data) posterior(start,data)}
   if(is.null(propob)){
     propob = lapl_aprx(data[,1],data[,-1])
   }
@@ -74,9 +75,11 @@ RWMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5,
 #' \code{IndepMH} computes random draws of parameters using a specified proposal distribution.
 #'
 #' @param data data required for the posterior distribution
-#' @param propob a list of mean and variance-covariance of the normal proposal distribution (default:NULL)
+#' @param propob a list of mean and variance-covariance of the normal proposal distribution; 
+#' defaults to \code{NULL}. Write list as propob=list(mode=mode,var=variance-covariance)
 #' @param posterior the posterior distribution. It is set to null in order to use the logit posterior.
-#' The user can specify log posterior as a function of parameters and data (pars,data)
+#' The user can specify log posterior as a function of parameters and data (pars,data). For a more
+#' flexible and generic implementation, use \code{\link{indepMHgen}}
 #' @param iter number of random draws desired (default: 1500)
 #' @param burn burn-in period for the MH algorithm (default: 500)
 #' @param vscale a positive value to scale up or down the variance-covariance matrix in
@@ -104,7 +107,7 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5
   if(is.null(posterior)){
     logpost<- function(start,data) posterior(start,data,Log=T,mu=mu,sig=sig,prior=prior)
     #define posterior distribution
-  }
+  }else{logpost=function(start,data) posterior(start,data)}
   if(is.null(propob)){
     propob = lapl_aprx(data[,1],data[,-1])
   }
@@ -139,7 +142,7 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5
 #' A Generic Independence Metropolis-Hastings Algorithm
 #'
 #' \code{IndepMHgen} computes random draws of parameters using a normal proposal distribution.
-#' This function implements a generic form of \code{IndepMH} from the package \code{bayesdistreg}
+#' This function implements a generic form of \code{\link{IndepMH}}
 #'
 #' @param start starting values of parameters for the MH algorithm.
 #' It is automatically generated from the normal proposal distribution but the user can also specify.
@@ -147,10 +150,10 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5
 #' Should take parameter input of the same length as \code{start} or \code{propob$mode} 
 #' @param ... additional arguments to the posterior function
 #' @param propob a list of mode and variance-covariance matrix of the normal proposal distribution. 
-#' Save list as propob=list(mode=mode,var=variance-covariance)
+#' Write list as propob=list(mode=mode,var=variance-covariance)
 #' @param const a vector function of parameters showing non-negative inequality constraints to be satisfied. 
 #' @param seed an integer as seed for reproducibility
-#' @param scale a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
+#' @param vscale a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
 #' set to the character string "HS18" for the Herbst and Shorfheide (2018) scale updating for a 0.25
 #' acceptance ratio.
 #' The default is \code{1.5} but the user can adjust it until a satisfactory acceptance rate is obtained.
@@ -171,7 +174,7 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5
 #' # laplace approximation of the posterior
 #' propob = list(mode=optp$par,var=-solve(optp$hessian)) #parameters of proposal distribution
 #' eigen(propob$var)$values # var-cov of proposal distribution is positive definite
-#' MHobj<- indepMHgen(posterior = logpost,propob = propob,scale = "HS18",iter = 6000,report=1000)
+#' MHobj<- indepMHgen(posterior = logpost,propob = propob,vscale = "HS18",iter = 6000,report=1000)
 #' # create an independent Metropolis-Hastings object
 #' dim(MHobj$Matpram) # a 2 x 5000 matrix with columns corresponding to draws of c1 and c2
 #' par(mfrow=c(1,2))
@@ -182,10 +185,10 @@ IndepMH<- function(data,propob=NULL,posterior=NULL,iter=1500,burn=500,vscale=1.5
 #' @export
 
 indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
-                      seed=1,scale=1.5,iter=5000,burn=floor(0.1*iter),
+                      seed=1,vscale=1.5,iter=5000,burn=floor(0.1*iter),
                       report=NULL){
-  if(scale!="HS18"){
-    varprop = scale*propob$var
+  if(vscale!="HS18"){
+    varprop = vscale*propob$var
   }else{
     varprop = propob$var
     c0 = 1.0 #initialise adapting scale
@@ -216,7 +219,7 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
         Mat[i,]=start 
         postvals[i]<- postvals[i-1]
       }
-      if(scale=="HS18"){
+      if(vscale=="HS18"){
         rx = AccptRate/i #acceptance ratio so far
         c1 = c0*(0.95 + 0.1*exp(16*(rx-0.25))/(1+exp(16*(rx-0.25))))
         c0 = c1
@@ -256,7 +259,7 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
         Mat[i,]=start 
         postvals[i]<- postvals[i-1]
       }
-      if(scale=="HS18"){
+      if(vscale=="HS18"){
         rx = AccptRate/i #acceptance ratio so far
         c1 = c0*(0.95 + 0.1*exp(16*(rx-0.25))/(1+exp(16*(rx-0.25))))
         c0 = c1
@@ -277,7 +280,7 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
 #' A Generic Random Walk Metropolis-Hastings Algorithm
 #'
 #' \code{rwMHgen} computes random draws of parameters using a normal proposal distribution.
-#' This function implements a generic form of \code{RWMH} from the package \code{bayesdistreg}
+#' This function implements a generic form of \code{\link{RWMH}}
 #'
 #' @param start starting values of parameters for the MH algorithm.
 #' It is automatically generated from the normal proposal distribution but the user can also specify.
@@ -285,10 +288,10 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
 #' Should take parameter input of the same length as \code{start} or \code{propob$mode}
 #' @param ... additional arguments to the posterior function
 #' @param propob a list of mode and variance-covariance matrix of the normal proposal distribution. 
-#' Save list as propob=list(mode=mode,var=variance-covariance)
+#' Write list as propob=list(mode=mode,var=variance-covariance)
 #' @param const a vector function of parameters showing non-negative inequality constraints to be satisfied. 
 #' @param seed an integer as seed for reproducibility
-#' @param scale a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
+#' @param vscale a value multiplied by \code{propob$var} in order to adjust the proposal distribution. Else
 #' set to the character string "HS18" for the Herbst and Shorfheide (2018) scale updating for a 0.25
 #' acceptance ratio.
 #' The default is \code{1.5} but the user can adjust it until a satisfactory acceptance rate is obtained.
@@ -309,7 +312,7 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
 #' # laplace approximation of the posterior
 #' propob = list(mode=optp$par,var=-solve(optp$hessian)) #parameters of proposal distribution
 #' eigen(propob$var)$values # var-cov of proposal distribution is positive definite
-#' MHobj<- rwMHgen(posterior = logpost,propob = propob,scale = "HS18",iter = 6000,report=1500)
+#' MHobj<- rwMHgen(posterior = logpost,propob = propob,vscale = "HS18",iter = 6000,report=1500)
 #' # create an independent Metropolis-Hastings object
 #' dim(MHobj$Matpram) # a 2 x 5000 matrix with columns corresponding to draws of c1 and c2
 #' par(mfrow=c(1,2))
@@ -320,10 +323,10 @@ indepMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
 #' @export
 
 rwMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
-                   seed=1,scale=1.5,iter=5000,burn=floor(0.1*iter),
+                   seed=1,vscale=1.5,iter=5000,burn=floor(0.1*iter),
                    report=NULL){
-  if(scale!="HS18"){
-    varprop = scale*propob$var
+  if(vscale!="HS18"){
+    varprop = vscale*propob$var
   }else{
     varprop = propob$var
     c0 = 1.0 #initialise adapting scale
@@ -354,7 +357,7 @@ rwMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
         Mat[i,]=start 
         postvals[i]<- postvals[i-1]
       }
-      if(scale=="HS18"){
+      if(vscale=="HS18"){
         rx = AccptRate/i #acceptance ratio so far
         c1 = c0*(0.95 + 0.1*exp(16*(rx-0.25))/(1+exp(16*(rx-0.25))))
         c0 = c1
@@ -394,7 +397,7 @@ rwMHgen<- function(start=NULL,posterior=NULL,...,propob=NULL,const=NULL,
         Mat[i,]=start 
         postvals[i]<- postvals[i-1]
       }
-      if(scale=="HS18"){
+      if(vscale=="HS18"){
         rx = AccptRate/i #acceptance ratio so far
         c1 = c0*(0.95 + 0.1*exp(16*(rx-0.25))/(1+exp(16*(rx-0.25))))
         c0 = c1

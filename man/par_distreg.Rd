@@ -10,7 +10,7 @@ par_distreg(thresh, data0, fn = distreg, no_cores = 1,
 \arguments{
 \item{thresh}{vector of threshold values.}
 
-\item{data0}{the original data set with a continous dependent variable in the first column}
+\item{data0}{the original data set with the dependent variable in the first column}
 
 \item{fn}{bayesian distribution regression function. the default is distreg provided in the package}
 
@@ -25,7 +25,7 @@ mat a G x M matrix of output (G is the length of thresh, M is the number of draw
 }
 \description{
 \code{par_distreg} uses parallel computation to compute bayesian distribution regression for a given
-vector of threshold values and a data (with first column being the outcome variable)
+vector of threshold values and data (with first column being the outcome variable)
 }
 \examples{
 data0=faithful[,c(2,1)]; qnts<-quantile(data0[,1],c(0.05,0.25,0.5,0.75,0.95))

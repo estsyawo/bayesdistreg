@@ -12,10 +12,11 @@ RWMH(data, propob = NULL, posterior = NULL, iter = 1500,
 \item{data}{data required for the posterior distribution. First column is the outcome}
 
 \item{propob}{a list of mean and variance-covariance of the normal proposal distribution
-(default: NULL i.e. internally generated)}
+(default: NULL i.e. internally generated). Write list as propob=list(mode=mode,var=variance-covariance)}
 
 \item{posterior}{the posterior distribution. It is set to null in order to use the logit posterior.
-The user can specify log posterior as a function of parameters and data (pars,data)}
+The user can specify log posterior as a function of parameters and data (pars,data). For a more
+flexible and generic implementation, use \code{\link{rwMHgen}}}
 
 \item{iter}{number of random draws desired}
 

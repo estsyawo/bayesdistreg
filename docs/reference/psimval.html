@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parallel compute — parLply • bayesdistreg</title>
+<title>A Bayesian "p-value" — psimval • bayesdistreg</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,11 @@
 
 
 
-<meta property="og:title" content="Parallel compute — parLply" />
+<meta property="og:title" content="A Bayesian "p-value" — psimval" />
 
-<meta property="og:description" content="parLply uses parLapply with a function as input" />
+<meta property="og:description" content="psimval finds a minimum alpha in the interval (0,1) such that the 1-alpha simultaneous 
+confidence band excludes the vector of DF. This is intended to be a summary value for a joint
+hypothesis test of equality." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -97,49 +99,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parallel compute</h1>
+    <h1>A Bayesian "p-value"</h1>
     
-    <div class="hidden name"><code>parLply.Rd</code></div>
+    <div class="hidden name"><code>psimval.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p><code>parLply</code> uses <code><a href='https://www.rdocumentation.org/packages/parallel/topics/clusterApply'>parLapply</a></code> with a function as input</p>
+    <p><code>psimval</code> finds a minimum alpha in the interval (0,1) such that the 1-alpha simultaneous 
+confidence band excludes the vector of DF. This is intended to be a summary value for a joint
+hypothesis test of equality.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>parLply</span>(<span class='no'>vec</span>, <span class='no'>fn</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"FORK"</span>, <span class='kw'>no_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>psimval</span>(<span class='no'>DF</span>, <span class='no'>DFmat</span>, <span class='no'>alpha</span>, <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>typeband</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"sym"</span>, <span class='st'>"asym"</span>,
+  <span class='st'>"OM"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>vec</th>
-      <td><p>vector of inputs over which to parallel compute</p></td>
+      <th>DF</th>
+      <td><p>the target vector; set to a vector of zeroes if a "p-value" is desired</p></td>
     </tr>
     <tr>
-      <th>fn</th>
-      <td><p>the function</p></td>
+      <th>DFmat</th>
+      <td><p>the matrix of draws of the distribution, rows correspond to 
+elements in <code>DF</code></p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>this option is set to "FORK", use "PSOCK" on windows</p></td>
+      <th>alpha</th>
+      <td><p>level such that <code>1-alpha</code> is the desired probability of coverage</p></td>
     </tr>
     <tr>
-      <th>no_cores</th>
-      <td><p>the number of cores to use. Defaults at 1</p></td>
+      <th>eps</th>
+      <td><p>steps of the grid on the interval (0,1) to search</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>extra inputs to <code>fn()</code></p></td>
+      <th>typeband</th>
+      <td><p>the type of confidence band to use: "sym" for <code><a href='simcnfB.html'>simcnfB</a></code>, 
+"asym" for <code><a href='asymcnfB.html'>asymcnfB</a></code>, or "OM" for <code><a href='jntCBOM.html'>jntCBOM</a></code> are supported.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>out parallel computed output</p>
+    <p>alf the "p-value"</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>14</span>); <span class='no'>m</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Beta'>rbeta</a></span>(<span class='fl'>500</span>,<span class='fl'>1</span>,<span class='fl'>4</span>),<span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>5</span>) + <span class='fl'>1</span>:<span class='fl'>5</span>
+(<span class='no'>pval</span><span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='fu'>psimval</span>(<span class='kw'>DF</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>0.1</span>,<span class='fl'>5</span>),<span class='kw'>DFmat</span> <span class='kw'>=</span> <span class='no'>m</span>,<span class='kw'>alpha</span><span class='kw'>=</span><span class='fl'>0.05</span>,<span class='kw'>typeband</span><span class='kw'>=</span><span class='st'>"OM"</span>),<span class='fl'>3</span>))</div><div class='output co'>#&gt; [1] 0</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -147,7 +158,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

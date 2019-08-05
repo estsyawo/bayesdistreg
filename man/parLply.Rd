@@ -21,6 +21,5 @@ parLply(vec, fn, type = "FORK", no_cores = 1, ...)
 out parallel computed output
 }
 \description{
-\code{parLply} uses \code{parlapply} from the \code{parallel} package with 
-a function as input
+\code{parLply} uses \code{\link[parallel]{parLapply}} with a function as input
 }

@@ -11,7 +11,8 @@ quant_bdr(taus, thresh, mat)
 
 \item{thresh}{a vector of threshold values used in a \code{\link{par_distreg}} type function}
 
-\item{mat}{bayesian distribution regression output matrix}
+\item{mat}{bayesian distribution regression output matrix; columns should correspond to draws of
+the distribution function}
 }
 \value{
 qmat matrix of quantile distribution
@@ -19,4 +20,14 @@ qmat matrix of quantile distribution
 \description{
 \code{quant_bdr} converts a bayesian distribution regression matrix from \code{\link{par_distreg}}
 output to a matrix of quantile distribution.
+}
+\examples{
+set.seed(2); Fmat = matrix(runif(1000),1000,10); taus = seq(0,1, length.out=1000)
+thresh = qnorm(taus)
+par(mfrow=c(1,2))
+plot(thresh,sort(apply(apply(Fmat,2,sort),1,mean)),type="l",xlab="y",ylab="F(y)",
+main="Distribution Function")
+qmat<- quant_bdr(taus,thresh,Fmat); plot(taus,apply(qmat,1,mean),type = "l",
+xlab="tau",ylab="Qy",main="Quantile Function")
+par(mfrow=c(1,1))
 }
