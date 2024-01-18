@@ -4,9 +4,18 @@
 \alias{rwMHgen}
 \title{A Generic Random Walk Metropolis-Hastings Algorithm}
 \usage{
-rwMHgen(start = NULL, posterior = NULL, ..., propob = NULL,
-  const = NULL, seed = 1, vscale = 1.5, iter = 5000,
-  burn = floor(0.1 * iter), report = NULL)
+rwMHgen(
+  start = NULL,
+  posterior = NULL,
+  ...,
+  propob = NULL,
+  const = NULL,
+  seed = 1,
+  vscale = 1.5,
+  iter = 5000,
+  burn = floor(0.1 * iter),
+  report = NULL
+)
 }
 \arguments{
 \item{start}{starting values of parameters for the MH algorithm.

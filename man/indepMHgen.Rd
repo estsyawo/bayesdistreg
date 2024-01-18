@@ -4,9 +4,18 @@
 \alias{indepMHgen}
 \title{A Generic Independence Metropolis-Hastings Algorithm}
 \usage{
-indepMHgen(start = NULL, posterior = NULL, ..., propob = NULL,
-  const = NULL, seed = 1, vscale = 1.5, iter = 5000,
-  burn = floor(0.1 * iter), report = NULL)
+indepMHgen(
+  start = NULL,
+  posterior = NULL,
+  ...,
+  propob = NULL,
+  const = NULL,
+  seed = 1,
+  vscale = 1.5,
+  iter = 5000,
+  burn = floor(0.1 * iter),
+  report = NULL
+)
 }
 \arguments{
 \item{start}{starting values of parameters for the MH algorithm.

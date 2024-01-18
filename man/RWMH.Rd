@@ -4,9 +4,18 @@
 \alias{RWMH}
 \title{Random Walk Metropolis-Hastings Algorithm}
 \usage{
-RWMH(data, propob = NULL, posterior = NULL, iter = 1500,
-  burn = 500, vscale = 1.5, start = NULL, prior = "Normal",
-  mu = 0, sig = 10)
+RWMH(
+  data,
+  propob = NULL,
+  posterior = NULL,
+  iter = 1500,
+  burn = 500,
+  vscale = 1.5,
+  start = NULL,
+  prior = "Normal",
+  mu = 0,
+  sig = 10
+)
 }
 \arguments{
 \item{data}{data required for the posterior distribution. First column is the outcome}

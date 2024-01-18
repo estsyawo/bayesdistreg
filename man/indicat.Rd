@@ -17,3 +17,7 @@ val
 \description{
 This function creates 0-1 indicators for a given threshold y0 and vector y
 }
+\examples{
+yb = indicat(faithful$waiting,quantile(faithful$waiting,probs=c(0.25,0.5,0.75))) 
+summary(yb)
+}

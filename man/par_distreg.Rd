@@ -4,8 +4,7 @@
 \alias{par_distreg}
 \title{Parallel compute bayesian distribution regression}
 \usage{
-par_distreg(thresh, data0, fn = distreg, no_cores = 1,
-  type = "PSOCK", ...)
+par_distreg(thresh, data0, fn = distreg, no_cores = 1, type = "PSOCK", ...)
 }
 \arguments{
 \item{thresh}{vector of threshold values.}

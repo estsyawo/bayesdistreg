@@ -5,19 +5,17 @@
 #' @param y vector y
 #' @param y0 threshold value y0
 #' @return val
-#'
+#' 
+#' @examples
+#' yb = indicat(faithful$waiting,quantile(faithful$waiting,probs=c(0.25,0.5,0.75))) 
+#' summary(yb)
 #' @export
 
 indicat<- function(y,y0){
-  if(y<=y0){
-    val<- 1
-  }else{
-    val=0
-  }
-  return(val)
+  fn=function(y0){as.numeric(y<=y0)}
+  fn=Vectorize(fn)
+  sapply(y0,fn)
 }
-indicat<- base::Vectorize(indicat) #make the function usable with a vector y
-
 #===============================================================================
 #' Logit function
 #'
@@ -434,10 +432,10 @@ jntCBOM<- function(DF,DFmat,alpha=0.05,eps=1e-3){
 #' confidence band excludes the vector of DF. This is intended to be a summary value for a joint
 #' hypothesis test of equality. 
 #'
-#' @param DF the target vector; set to a vector of zeroes if a "p-value" is desired
+#' @param DF the target vector needed to construct the confidence band
 #' @param DFmat the matrix of draws of the distribution, rows correspond to 
 #' elements in \code{DF}
-#' @param alpha level such that \code{1-alpha} is the desired probability of coverage
+#' @param ialpha a starting value of alpha to be searched on the interval (0,1)
 #' @param eps steps of the grid on the interval (0,1) to search
 #' @param typeband the type of confidence band to use: "sym" for \code{\link{simcnfB}}, 
 #' "asym" for \code{\link{asymcnfB}}, or "OM" for \code{\link{jntCBOM}} are supported.
@@ -445,12 +443,12 @@ jntCBOM<- function(DF,DFmat,alpha=0.05,eps=1e-3){
 #' 
 #' @examples 
 #' set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
-#' (pval<- round(psimval(DF=rep(0.1,5),DFmat = m,alpha=0.05,typeband="OM"),3))
+#' (pval<- round(psimval(DF=rep(0.1,5),DFmat = m,ialpha=0.05,typeband="OM"),3))
 #' 
 #' @export
 #' 
 
-psimval<-function(DF,DFmat,alpha,eps=1e-04,typeband=c("sym","asym","OM")){
+psimval<-function(DF,DFmat,ialpha=0.05,eps=1e-04,typeband=c("sym","asym","OM")){
   typeband<- match.arg(typeband)
   if(typeband=="sym"){
     fn=function(DF,DFmat,alpha){
@@ -468,10 +466,10 @@ psimval<-function(DF,DFmat,alpha,eps=1e-04,typeband=c("sym","asym","OM")){
       list(lbCB=(c1a$CB[,1]),ubCB=(c1a$CB[,2]))
     }
   }
-  CB=fn(DF=DF,DFmat = DFmat,alpha = alpha)
+  CB=fn(DF=DF,DFmat = DFmat,alpha = ialpha)
   
   zg = !all((CB$lbCB)*(CB$ubCB)<=0)
-  alf = alpha
+  alf = ialpha
   if(zg){ #deacrease alpha, else 
     while(zg & alf>eps){
       alf=alf-eps

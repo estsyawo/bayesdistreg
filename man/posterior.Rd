@@ -4,8 +4,7 @@
 \alias{posterior}
 \title{Posterior distribution}
 \usage{
-posterior(pars, data, Log = TRUE, mu = 0, sig = 25,
-  prior = "Normal")
+posterior(pars, data, Log = TRUE, mu = 0, sig = 25, prior = "Normal")
 }
 \arguments{
 \item{pars}{parameter values}

@@ -4,16 +4,21 @@
 \alias{psimval}
 \title{A Bayesian "p-value"}
 \usage{
-psimval(DF, DFmat, alpha, eps = 1e-04, typeband = c("sym", "asym",
-  "OM"))
+psimval(
+  DF,
+  DFmat,
+  ialpha = 0.05,
+  eps = 1e-04,
+  typeband = c("sym", "asym", "OM")
+)
 }
 \arguments{
-\item{DF}{the target vector; set to a vector of zeroes if a "p-value" is desired}
+\item{DF}{the target vector needed to construct the confidence band}
 
 \item{DFmat}{the matrix of draws of the distribution, rows correspond to 
 elements in \code{DF}}
 
-\item{alpha}{level such that \code{1-alpha} is the desired probability of coverage}
+\item{ialpha}{a starting value of alpha to be searched on the interval (0,1)}
 
 \item{eps}{steps of the grid on the interval (0,1) to search}
 
@@ -30,6 +35,6 @@ hypothesis test of equality.
 }
 \examples{
 set.seed(14); m=matrix(rbeta(500,1,4),nrow = 5) + 1:5
-(pval<- round(psimval(DF=rep(0.1,5),DFmat = m,alpha=0.05,typeband="OM"),3))
+(pval<- round(psimval(DF=rep(0.1,5),DFmat = m,ialpha=0.05,typeband="OM"),3))
 
 }
